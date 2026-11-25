@@ -31,7 +31,7 @@
 .candidate-score{font:22px/1 var(--display);color:var(--ink)}
 .timeline-candidates .secondary{min-height:36px;padding:5px 14px;font-size:14px}
 .swap-button{display:inline-flex;flex-direction:column;gap:4px}
-.ready-pill{display:inline-flex;align-items:center;gap:5px;font:600 12px/1 Work,sans-serif;border:1px solid var(--line);border-radius:999px;padding:4px 9px;color:var(--ink);white-space:nowrap}
+.ready-pill{display:inline-flex;align-items:center;gap:5px;font:600 12px/1 Work,sans-serif;border:1px solid var(--line);border-radius:8px;padding:4px 9px;color:var(--ink);white-space:nowrap}
 .ready-pill.pass{background:var(--lime,#9be35b)}.ready-pill.warn{background:var(--yellow)}.ready-pill.fail{background:#ffb4a8}
 .ready-check{border:1px solid var(--line);border-radius:14px;background:var(--paper-2);padding:12px 14px}
 .ready-check.pass{background:#effbe3}.ready-check.fail{background:#fff0ec}
