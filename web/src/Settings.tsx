@@ -99,5 +99,5 @@ export function AiStatusLine({onOpenSettings}:{onOpenSettings:()=>void}){
  const [data,setData]=useState<SettingsData|null>(null);
  useEffect(()=>{getSettings().then(setData).catch(()=>{});},[]);
  if(!data)return null;const on=aiProviders(data);
- return <p className="ai-status"><KeyRound size={15}/>{on.length?`AI is on: ${on.join(', ')}.`:'AI is off: add a free Gemini or Groq key in Settings.'} <button type="button" className="text-button" onClick={onOpenSettings}>Open Settings</button></p>;
+ return <div className={`ai-status ${on.length?'on':'off'}`} role="status"><i className="ai-dot" aria-hidden="true"/><span className="ai-text" title={on.length?`AI writing is on with `:undefined}><strong>{on.length?'AI on':'AI off'}</strong><span>{on.length?on.slice(0,2).join(', ')+(on.length>2?` +`:''):'No key yet'}</span></span><button type="button" className="ai-link" onClick={onOpenSettings}><KeyRound size={13}/>{on.length?'Settings':'Add a free key'}</button></div>;
 }
