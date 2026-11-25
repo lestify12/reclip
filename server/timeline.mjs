@@ -1,0 +1,42 @@
+import fs from 'node:fs';import path from 'node:path';
+import {laugh,strong,clipCue,loudness} from './moments.mjs';import {pickClips,momentShape} from './selection.mjs';import {streamPeople} from './people.mjs';import {loadCrowd} from './twitch-clips.mjs';import {loadSignals} from './signals.mjs';import {jobChat} from './twitch-chat.mjs';import {rawMoments,rawTitle,rawReasons} from './raw.mjs';import {loadLessons} from './learning.mjs';
+// Whole-stream view for choosing moments by hand: activity per bucket plus the picker's ranked moments.
+const overlaps=(a,b)=>Math.min(a.end,b.end)-Math.max(a.start,b.start)>Math.min(3,(a.end-a.start)*.1);
+
+export function streamActivity(transcript,{bucket=5}={}){
+ const words=transcript.words||[],duration=transcript.duration||words.at(-1)?.end||0,loud=loudness(transcript),n=Math.max(1,Math.ceil(duration/bucket));
+ const buckets=Array.from({length:n},(_,k)=>{const t=k*bucket,{ratio,peak}=loud.at(t,Math.min(duration,t+bucket));return {t,loud:+ratio.toFixed(2),peak:+peak.toFixed(2),laugh:0,hype:0,cue:0,words:0};});
+ words.forEach((w,i)=>{const b=buckets[Math.min(n-1,Math.floor(w.start/bucket))],t=w.text||'',pair=`${words[i-1]?.text||''} ${t}`;if(!b)return;b.words++;if(laugh.test(t))b.laugh++;if(strong.test(t)||strong.test(pair))b.hype++;if(clipCue.test(pair))b.cue++;});
+ return {duration,bucket,buckets};
+}
+
+/** Ranked moments across the whole stream (up to 30, non-overlapping). */
+export function streamCandidates(job,transcript,{folder}={}){
+ const duration=transcript.duration||job.metadata?.duration||transcript.words?.at(-1)?.end||0;
+ // Raw projects (no words): the loudest and busiest moments.
+ if(transcript.raw||!transcript.words?.length)return rawMoments({energy:transcript.energy,action:loadSignals(folder)?.action,duration,count:30}).map(m=>({start:m.start,end:m.end,score:m.score,category:'highlight',title:rawTitle(job,m.start),hook:'',peakAt:m.peakAt,reasons:rawReasons(m)}));
+ return pickClips({...transcript,duration},{...job.options,count:30,minDuration:20,maxDuration:90},{people:streamPeople(job,{folder}),crowd:loadCrowd(folder),signals:loadSignals(folder),chat:jobChat(job,folder),lessons:loadLessons(path.dirname(folder))}).map(c=>({start:c.start,end:c.end,score:c.score,category:c.category,title:c.title,hook:c.hook,peakAt:c.peakAt,reasons:c.reasons}));
+}
+
+/** Timeline for a job, cached in work/<id>/timeline.json until the transcript changes; `used` is computed per request. */
+export function jobTimeline(job,folder){
+ const file=path.join(folder,'transcript.json');if(!fs.existsSync(file))throw Object.assign(new Error('Transcript is not ready'),{status:404});
+ const stat=fs.statSync(file),key=`${stat.mtimeMs}:${stat.size}:${momentShape(job.options)?job.options.editTemplate:''}`,cacheFile=path.join(folder,'timeline.json');let cached=null;
+ try{cached=JSON.parse(fs.readFileSync(cacheFile,'utf8'));if(cached.key!==key)cached=null;}catch{cached=null;}
+ if(!cached){const transcript=JSON.parse(fs.readFileSync(file,'utf8'));cached={key,...streamActivity(transcript),candidates:streamCandidates(job,transcript,{folder})};fs.writeFileSync(cacheFile,JSON.stringify(cached));}
+ const {key:_,...out}=cached,clips=job.clips||[];
+ return {...out,candidates:out.candidates.map(c=>({...c,used:clips.some(k=>overlaps(c,k))})),clips:clips.map(c=>({id:c.id,start:c.start,end:c.end,title:c.title,kept:c.kept}))};
+}
+
+/** Best unused candidate that overlaps none of `clips`. */
+export function bestUnused(candidates,clips){return [...candidates].sort((a,b)=>b.score-a.score).find(c=>!clips.some(k=>overlaps(c,k)))||null;}
+
+/**
+ * "Clip again": the `count` best candidates that repeat nothing — no overlap with the project's clips (kept or
+ * discarded), with moments swapped away earlier (`retired`), or with each other.
+ */
+export function unusedMoments(candidates,{clips=[],retired=[]}={},count=5){
+ const taken=[...clips,...retired].filter(r=>Number.isFinite(r?.start)&&Number.isFinite(r?.end)),out=[];
+ for(const c of [...candidates].sort((a,b)=>b.score-a.score)){if(out.length>=count)break;if(!taken.some(k=>overlaps(c,k))&&!out.some(k=>overlaps(c,k)))out.push(c);}
+ return out;
+}
