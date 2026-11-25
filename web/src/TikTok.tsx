@@ -12,7 +12,7 @@ const states:Record<string,string>={
 async function request<T>(url:string,method='GET',body?:unknown):Promise<T>{
  const response=await fetch(url,{method,cache:'no-store',headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
  const data=await response.json().catch(()=>null);
- if(!data)throw new Error('Restart OpenClip to load the TikTok endpoints.');
+ if(!data)throw new Error('Restart Reclip to load the TikTok endpoints.');
  if(!response.ok)throw new Error(data.error||'TikTok request failed.');
  return data;
 }
@@ -44,7 +44,7 @@ export function TikTokConnection(){
   finally{setBusy('');}
  }
  async function connect(){
-  const popup=window.open('','openclip-tiktok','width=620,height=760');
+  const popup=window.open('','reclip-tiktok','width=620,height=760');
   setBusy('connect');setError('');
   try{
    const data=await request<{url:string}>('/api/tiktok/connect','POST');

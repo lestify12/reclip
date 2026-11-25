@@ -62,7 +62,7 @@ export class CreatorPhotos{
   await this.inflight.get(key);return this.current(key);
  }
  async download(key,page){
-  const headers={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) OpenClip','accept-language':'en'};
+  const headers={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Reclip','accept-language':'en'};
   try{
    const r=await this.fetch(page,{headers,redirect:'follow',signal:AbortSignal.timeout(12000)});if(!r.ok)throw new Error(`page ${r.status}`);
    const url=ogImage((await readCapped(r,PAGE_MAX)).toString('utf8'));if(!url)throw new Error('no profile picture on the page');

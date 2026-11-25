@@ -1,11 +1,11 @@
 /**
- * Translates OpenClip's interface on the page, for every screen, without touching the React code: it rewrites the
+ * Translates Reclip's interface on the page, for every screen, without touching the React code: it rewrites the
  * text of the page's text nodes (and their title / placeholder / aria-label) and keeps the English original, so going
  * back to English is exact. React only ever replaces text it changed itself, and the observer translates that again.
  *
  * Translation runs on this computer with the browser's built-in translator (Chrome / Edge, `Translator`); without one
  * it uses the user's own AI key through the server. Every translated line is saved twice, in this browser and in the
- * OpenClip folder (work/ui-language/), and so is the chosen language: after a restart the app opens straight in it.
+ * Reclip folder (work/ui-language/), and so is the chosen language: after a restart the app opens straight in it.
  *
  * Never translated: anything the user made or the video says (titles, captions, transcripts, project names, post
  * text), everything inside [translate="no"] / .notranslate, form fields, code and commands.
@@ -27,7 +27,7 @@ const SKIP='[translate="no"],.notranslate,[contenteditable=""],[contenteditable=
  '.brand,.brand-by,.tip-qr,.history-item strong,.creator-avatar,.creator-menu b,.project-heading h1,.clip-headline,.moment-title,.candidate-title,.metadata-description,.post-caption,.post-card strong,.transcript-words,.live-caption,.live-pop,.live-series,.live-context,.hook-title,.update-steps,.update-list strong';
 const ATTRS=['title','placeholder','aria-label'] as const;
 const LETTER=/\p{L}/u,NUM=/\d+(?:[.,:]\d+)*/g,SLOT=/\{(\d+)\}/g;
-const LS_LANG='openclip-language',lsStrings=(l:string)=>`openclip-ui-${l}`;
+const LS_LANG='reclip-language',lsStrings=(l:string)=>`reclip-ui-${l}`;
 
 /** "Transcribed 120 / 300s" → key "Transcribed {0} / {1}s" + the numbers, so counters are translated once. */
 function parse(text:string){const m=text.match(/^(\s*)([\s\S]*?)(\s*)$/)!,core=m[2];if(!core||core.length>600||!LETTER.test(core)||/^(https?:\/\/|www\.)\S+$/i.test(core))return null;
@@ -67,7 +67,7 @@ class Engine{
      if(gen!==this.generation){this.translator.destroy?.();return;}
      this.engine='browser';this.emit({download:null,needsClick:false});}
    }else if(await aiReady())this.engine='ai';
-   else if(!this.cache.size)throw new Error(t?`This browser can’t translate into ${languageName(language,'en')}. Add an AI key to .env, or pick another language.`:'Open OpenClip in Chrome or Edge to translate it on this computer, or add an AI key to .env.');
+   else if(!this.cache.size)throw new Error(t?`This browser can’t translate into ${languageName(language,'en')}. Add an AI key to .env, or pick another language.`:'Open Reclip in Chrome or Edge to translate it on this computer, or add an AI key to .env.');
   }catch(e){if(gen===this.generation)this.emit({error:(e as Error).message||'Translation could not start',download:null});}
   if(gen!==this.generation)return;
   this.emit({engine:this.engine??'saved'});this.scan(document.body);this.schedule();
@@ -130,7 +130,7 @@ class Engine{
    }
   }finally{this.running=false;if(gen===this.generation){this.emit({busy:0});if(this.waiting.size&&(this.translator||this.engine==='ai'))this.schedule();}}
  }
- /** Browser translations also go to the OpenClip folder (the server saves AI ones itself). */
+ /** Browser translations also go to the Reclip folder (the server saves AI ones itself). */
  private persist(){clearTimeout(this.saveTimer);const lang=this.language;this.saveTimer=window.setTimeout(()=>{const entries=this.unsaved;this.unsaved={};if(!Object.keys(entries).length||lang==='en')return;
   fetch(`/api/ui-language/${lang}/strings`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({entries})}).catch(()=>{});},1500);}
 }
@@ -153,7 +153,7 @@ async function aiTranslate(language:string,texts:string[]):Promise<Record<string
  const r=await fetch(`/api/ui-language/${language}/translate`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({texts})});
  const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body.error||'Translation failed');return body;
 }
-/** The language to open in: this browser's choice, else the one saved in the OpenClip folder. */
+/** The language to open in: this browser's choice, else the one saved in the Reclip folder. */
 export async function startupLanguage():Promise<string>{
  const local=savedLanguage();if(local)return local;
  try{const r=await fetch('/api/ui-language');if(r.ok){const {language}=await r.json();return typeof language==='string'?language:'en';}}catch{/* offline */}

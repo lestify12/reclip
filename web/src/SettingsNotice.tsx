@@ -4,7 +4,7 @@ import {KeyRound,RotateCcw} from 'lucide-react';
 type Status={file:string|null;encoding:string|null;problems:string[];keys:Record<string,boolean>};
 const NAMES:Record<string,string>={GEMINI_API_KEY:'Gemini',GROQ_API_KEY:'Groq',OLLAMA:'Ollama',ANTHROPIC_API_KEY:'Claude',OPENAI_API_KEY:'OpenAI'};
 
-/** Home page: which AI keys OpenClip found in .env, and what to fix when a key isn't being picked up. */
+/** Home page: which AI keys Reclip found in .env, and what to fix when a key isn't being picked up. */
 export default function SettingsNotice(){
  const [s,setS]=useState<Status|null>(null),[checking,setChecking]=useState(false);
  const check=()=>{setChecking(true);fetch('/api/settings-check').then(r=>r.ok?r.json():null).then(d=>{if(d)setS(d);}).catch(()=>{}).finally(()=>setChecking(false));};
@@ -14,6 +14,6 @@ export default function SettingsNotice(){
  return <section className="settings-notice" role="status"><KeyRound size={18}/><div>
   <strong>{found.length?`AI is on (${found.join(', ')}), but check your settings file`:'AI features are off: no API key found'}</strong>
   <ul>{s.problems.map(p=><li key={p}>{p}</li>)}{!found.length&&s.file&&<li>{s.file} has no key filled in. Put it right after the = sign, for example <code>GEMINI_API_KEY=AIza…</code>, with no # in front. For Ollama on this computer, set <code>OLLAMA_MODEL</code> to a model you pulled.</li>}</ul>
-  <small>OpenClip reads .env from its own folder and picks up changes by itself. No rebuild or setup needed.</small>
+  <small>Reclip reads .env from its own folder and picks up changes by itself. No rebuild or setup needed.</small>
  </div><button type="button" className="text-button" disabled={checking} onClick={check}><RotateCcw size={14}/>Check again</button></section>;
 }

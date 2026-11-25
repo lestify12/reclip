@@ -1,21 +1,14 @@
-# OpenClip
+# Reclip
 
 Turn a long stream, a podcast or any recording into captioned, edited Shorts (9:16) or regular videos (16:9), on your own computer.
 
-Paste a public YouTube, Twitch or Kick link (a past broadcast, a clip, or a YouTube or Twitch stream that is still live) or drop in a video file. OpenClip transcribes it locally, finds the best moments, edits each one with the template you choose, and exports ready-to-post MP4s. If you want, it also writes titles with AI and schedules the uploads to your YouTube channel.
+Paste a public YouTube, Twitch or Kick link (a past broadcast, a clip, or a YouTube or Twitch stream that is still live) or drop in a video file. Reclip transcribes it locally, finds the best moments, edits each one with the template you choose, and exports ready-to-post MP4s. If you want, it also writes titles with AI and schedules the uploads to your YouTube channel.
 
-## Spare me some change ☕
-
-OpenClip is free and made by one person, **Jaspher Tampos**. If it saves you time, a small tip keeps it going.
-
-- **In the Philippines:** scan the InstaPay code with any bank or e-wallet (GCash, Maya, BPI, BDO and more).
-- **From anywhere else:** tip by card or PayPal on Ko-fi: **[ko-fi.com/jasphertampos](https://ko-fi.com/jasphertampos)**, or scan the Ko-fi code.
-
-<img src="docs/media/tip-cards.png" alt="Two QR codes: InstaPay for the Philippines, and Ko-fi (ko-fi.com/jasphertampos) for tips from anywhere" width="560">
+Reclip is based on [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos, used under the MIT license.
 
 ## See it in action
 
-All three clips were made by OpenClip from one 12-minute film, *Tears of Steel* (credited below). The app transcribed it, found the moments and edited them; only the on-screen hook text was typed by hand. Click a preview to watch the full MP4 with sound.
+All three clips were made by Reclip from one 12-minute film, *Tears of Steel* (credited below). The app transcribed it, found the moments and edited them; only the on-screen hook text was typed by hand. Click a preview to watch the full MP4 with sound.
 
 | Skull Ending *(meme edit)* | Meme Reveal *(meme edit)* | Context Hit *(standard)* |
 | :---: | :---: | :---: |
@@ -62,7 +55,7 @@ All three clips were made by OpenClip from one 12-minute film, *Tears of Steel* 
 - **Edit everything.** Trim on words, fix captions, cut out the middle, add zooms, freezes, replays, sounds and labels.
 - **Checks every export.** Too quiet, clipping sound, black or frozen picture, or blurry footage get a warning on the clip before you post.
 - **Post it.** A posting calendar with YouTube uploads and scheduling, sending portrait videos to your TikTok inbox, and optional **auto-post**: when a project finishes, the best clips upload right away and the rest are spread over the next days.
-- **Learns from your channel.** Once you have a few uploads, OpenClip reads their view counts and favours the kinds of moments your channel does best with.
+- **Learns from your channel.** Once you have a few uploads, Reclip reads their view counts and favours the kinds of moments your channel does best with.
 
 ---
 
@@ -70,7 +63,7 @@ All three clips were made by OpenClip from one 12-minute film, *Tears of Steel* 
 
 You need four programs. Install them once, and make sure each one is on your `PATH`.
 
-OpenClip is developed and tested on Windows 11; macOS and Linux should work but are less tested. No graphics card is needed. Plan for about 10 GB of free disk space.
+Reclip is developed and tested on Windows 11; macOS and Linux should work but are less tested. No graphics card is needed. Plan for about 10 GB of free disk space.
 
 | Program | Version | Where to get it |
 | --- | --- | --- |
@@ -106,7 +99,7 @@ Without winget, use the installers instead:
 
 ### macOS
 
-Use this walkthrough to install, start and test OpenClip from Terminal. Plan for about 10 GB of free disk space. Homebrew's primary supported setup is Apple Silicon with macOS 15 or newer. Intel Macs and older macOS versions are best-effort. [Homebrew system requirements](https://docs.brew.sh/Installation#macos-requirements)
+Use this walkthrough to install, start and test Reclip from Terminal. Plan for about 10 GB of free disk space. Homebrew's primary supported setup is Apple Silicon with macOS 15 or newer. Intel Macs and older macOS versions are best-effort. [Homebrew system requirements](https://docs.brew.sh/Installation#macos-requirements)
 
 **1. Install the prerequisites.** If you don't have Apple's Command Line Tools, run `xcode-select --install` in Terminal and finish the installer. Install Homebrew and follow the **Next steps** it prints so `brew` works in Terminal. [Apple Command Line Tools](https://developer.apple.com/documentation/xcode/installing-the-command-line-tools) · [Homebrew](https://brew.sh/)
 
@@ -118,14 +111,14 @@ node --version
 ffmpeg -hide_banner -filters 2>/dev/null | grep ' ass '
 ```
 
-You should see Node `v24.x` and a line containing `ass`. The `ffmpeg-full` package provides the `libass` filter OpenClip uses to render captions. If the check fails, run the `export PATH=...` line again in the current Terminal window. [Homebrew Node 24](https://formulae.brew.sh/formula/node@24) · [Homebrew FFmpeg Full](https://formulae.brew.sh/formula/ffmpeg-full)
+You should see Node `v24.x` and a line containing `ass`. The `ffmpeg-full` package provides the `libass` filter Reclip uses to render captions. If the check fails, run the `export PATH=...` line again in the current Terminal window. [Homebrew Node 24](https://formulae.brew.sh/formula/node@24) · [Homebrew FFmpeg Full](https://formulae.brew.sh/formula/ffmpeg-full)
 
-**2. Download and start OpenClip.** Run these commands in the same Terminal window.
+**2. Download and start Reclip.** Run these commands in the same Terminal window.
 
 ```bash
 cd ~
-git clone https://github.com/jaspher19/open-clip-editor.git
-cd open-clip-editor
+git clone https://github.com/lestify12/reclip.git
+cd reclip
 npm ci --cache .cache/npm
 npm run setup
 npm run build
@@ -140,7 +133,7 @@ Setup uses `uv` to create the project's Python 3.12 environment and install the 
 
 ```bash
 export PATH="$(brew --prefix node@24)/bin:$(brew --prefix ffmpeg-full)/bin:$PATH"
-cd ~/open-clip-editor
+cd ~/reclip
 npm start
 ```
 
@@ -191,20 +184,20 @@ You don't install any of these by hand:
 
 None of these need a GPU, and yt-dlp uses your Node.js for YouTube, so you don't need anything else.
 
-> Use a drive with free space: Whisper models, downloads and renders can take several GB. OpenClip keeps all of its caches, models, uploads and temporary files **inside the project folder**.
+> Use a drive with free space: Whisper models, downloads and renders can take several GB. Reclip keeps all of its caches, models, uploads and temporary files **inside the project folder**.
 
 ## 2. Download and set up
 
 ```powershell
-git clone https://github.com/jaspher19/open-clip-editor.git
-cd open-clip-editor
+git clone https://github.com/lestify12/reclip.git
+cd reclip
 npm ci --cache .cache/npm
 npm run setup          # creates .venv and installs the Python workers (faster-whisper, yt-dlp)
 npm run setup:faces    # optional: face-follow framing model
 npm run build          # builds the web app
 ```
 
-`npm run setup` checks everything OpenClip needs (Node.js, Python, FFmpeg with captions, and on Windows the Visual C++ Runtime) and ends with a checklist. If something is missing, it says what and gives the install command for your computer; install it, open a new terminal, and run `npm run setup` again.
+`npm run setup` checks everything Reclip needs (Node.js, Python, FFmpeg with captions, and on Windows the Visual C++ Runtime) and ends with a checklist. If something is missing, it says what and gives the install command for your computer; install it, open a new terminal, and run `npm run setup` again.
 ## 3. Start the app
 
 ```powershell
@@ -221,7 +214,7 @@ The first transcription downloads the Whisper model you picked (the `small.en` d
 2. **Shape and edit style.** Choose **Portrait 9:16** or **Landscape 16:9**, then **Meme edit**, **Standard clips** or **Raw clips**, and pick a template. Each card plays a preview. Your shape stays when you switch templates. In 16:9 the whole picture is kept; the facecam, letterbox and white-canvas layouts only apply to 9:16.
 3. **Moments.** Choose how many clips you want, up to 24 (or *Auto*, about one per 11 minutes of video, up to 24). Then press the start button.
 
-OpenClip downloads (or uploads), transcribes, finds the moments and edits every one. When it's done, each clip is ready to download or post. Open any clip to change it:
+Reclip downloads (or uploads), transcribes, finds the moments and edits every one. When it's done, each clip is ready to download or post. Open any clip to change it:
 
 - Click transcript words to set the start and end, or to fix a caption.
 - Drag the captions anywhere on the preview to place them (arrow keys nudge, double-click resets), or pick a preset position.
@@ -266,7 +259,7 @@ Open **Video cutter** in the sidebar (or **Cut video** on a project) to cut any 
 - **Preview** the finished video live, in Portrait 9:16 or Landscape 16:9, as fill, whole picture, or **Camera + gameplay**.
 - **Camera + gameplay:** a pink box (camera) and a green box (gameplay) sit on the video. Drag them over the streamer's camera and the game, and drag a corner to resize. In the preview, drag and resize each panel to place it: camera on top, gameplay on top, camera in a corner, side by side, or anywhere you like. **Find the camera here** looks for the camera around the playhead. Each box keeps the shape of its panel, so what you box is exactly what shows.
 - **Text:** add captions, titles or an @handle, choose a font (Anton, Montserrat, Barlow Condensed, Work Sans, Luckiest Guy, Bangers, Comic Neue), size, colour and outline or box, and drag it into place on the preview. The export uses the same drawing as the preview, so it matches exactly.
-- **Auto captions:** press **Add auto captions** and the spoken words appear in sync, with the word being said highlighted. OpenClip transcribes only your parts, on your computer, including raw projects and long streams it hadn't fully transcribed. Style them like text (font, size, colours, outline, box or shadow, words at a time, presets) and drag them into place. Fix any word under **Fix a word**.
+- **Auto captions:** press **Add auto captions** and the spoken words appear in sync, with the word being said highlighted. Reclip transcribes only your parts, on your computer, including raw projects and long streams it hadn't fully transcribed. Style them like text (font, size, colours, outline, box or shadow, words at a time, presets) and drag them into place. Fix any word under **Fix a word**.
 - **Post** a finished cut straight to the Posting calendar as a private draft, then schedule or upload it to YouTube there. Downloading is optional.
 - **Export** the cut with that look. Cuts render in the background; download them, delete them, or **Edit again** to bring back the parts, layout, text and captions.
 
@@ -293,24 +286,24 @@ copy .env.example .env      # macOS/Linux: cp .env.example .env
 | `METADATA_AI` | Leave blank to use the first one set up (Gemini, Groq, Ollama, then Claude), or force `gemini`, `groq`, `ollama` or `claude` | |
 | `YOUTUBE_REGION` | Two-letter country for the trending chart used as title-style context | |
 
-OpenClip picks up changes to `.env` by itself, no restart needed, and the home page shows which keys it found (or what is wrong with the file). AI features send transcript text to the provider you chose. Your keys stay in `.env` on your computer, and `.env` is never committed. Always review AI titles for names and facts before posting.
+Reclip picks up changes to `.env` by itself, no restart needed, and the home page shows which keys it found (or what is wrong with the file). AI features send transcript text to the provider you chose. Your keys stay in `.env` on your computer, and `.env` is never committed. Always review AI titles for names and facts before posting.
 
 ## Optional: campaign requirements (Whop and similar)
 
 Clipping for a paid campaign? With AI set up (any of the keys above, or Ollama), **New project** shows a **Campaign requirements** box. Paste the campaign's brief, for example from a Whop campaign page: what to clip, how long, vertical or horizontal, required hashtags or tags, and what not to post.
 
-OpenClip has the AI read the brief once into rules, then:
+Reclip has the AI read the brief once into rules, then:
 
 - **picks moments that follow them**: the AI scores each candidate against the rules and drops the ones that don't fit;
 - **uses the campaign's length and shape** (for example 20–40 s, vertical), always within a minute for Shorts;
 - **writes titles by its rules** (for example "Title must start with MrBeast");
 - **adds its required hashtags and @mentions** to every clip's upload details.
 
-The project page shows the rules it used. The brief is pasted text (Whop pages need a login, so OpenClip doesn't read them), and the AI treats it only as clip requirements. Always check each clip against the campaign before you submit it.
+The project page shows the rules it used. The brief is pasted text (Whop pages need a login, so Reclip doesn't read them), and the AI treats it only as clip requirements. Always check each clip against the campaign before you submit it.
 
 ## Optional: posting to YouTube
 
-**📘 Step-by-step guide with fixes for every common error: [docs/YOUTUBE-SETUP.md](docs/YOUTUBE-SETUP.md).** The same guide is inside OpenClip under **Automation → YouTube setup**. The short version:
+**📘 Step-by-step guide with fixes for every common error: [docs/YOUTUBE-SETUP.md](docs/YOUTUBE-SETUP.md).** The same guide is inside Reclip under **Automation → YouTube setup**. The short version:
 
 1. Do everything with **the Google account that owns your YouTube channel**. If you have several accounts, use a private/incognito window.
 2. Open [Google's Personal setup page](https://console.cloud.google.com/auth/overview/personal). Keep the suggested project, choose Application type **Desktop app**, agree, click **Continue**, then click **Download JSON** before closing the window (Google shows the secret only once).
@@ -320,19 +313,19 @@ The project page shows the rules it used. The brief is pasted text (Whop pages n
 6. Select drafts and press **Upload selected**. Uploads are **private by default**. A scheduled post uploads now and YouTube publishes it at the time you set. New Google Cloud projects may be limited to private uploads until Google audits them.
 7. Optional: in **Posting calendar → Auto-post**, turn on auto-posting. When a project finishes, its best clean clips (kept, exported, no warnings) upload as public right away (2 by default) and up to 9 more are scheduled at your daily release times, using titles built from the on-screen hook with an emoji and hashtags. Each project auto-posts once, and nothing already uploaded is uploaded again. YouTube allows about 6 uploads a day by default, so keep the numbers near that.
 
-**Learning from your channel.** With YouTube connected, OpenClip reads the view counts of the clips it uploaded (twice a day; turn it off with `LESSONS_AUTO=0` in `.env`). After four or more uploads that are at least three days old, the picker favours the kinds of moments that did better on your channel, and says so on the clip (for example "Your channel: loud reactions get 40% more views").
+**Learning from your channel.** With YouTube connected, Reclip reads the view counts of the clips it uploaded (twice a day; turn it off with `LESSONS_AUTO=0` in `.env`). After four or more uploads that are at least three days old, the picker favours the kinds of moments that did better on your channel, and says so on the clip (for example "Your channel: loud reactions get 40% more views").
 
-**Automatic thumbnails.** When you add a regular (horizontal) video to the posting calendar, OpenClip makes a 1280×720 thumbnail from the clip's project: the streamer's biggest reaction cut out with a white outline over a bright gameplay frame, two to four big words from the clip title (or your own), the game name, and an optional LIVE badge. Change the words or make it again from the post's thumbnail panel. YouTube does not let apps set a Shorts thumbnail, so for Shorts the panel makes an image to download and set in the YouTube app. The official game logo is never used; the game name is drawn in OpenClip's own lettering. Run `npm run setup:faces` once to download the face models.
+**Automatic thumbnails.** When you add a regular (horizontal) video to the posting calendar, Reclip makes a 1280×720 thumbnail from the clip's project: the streamer's biggest reaction cut out with a white outline over a bright gameplay frame, two to four big words from the clip title (or your own), the game name, and an optional LIVE badge. Change the words or make it again from the post's thumbnail panel. YouTube does not let apps set a Shorts thumbnail, so for Shorts the panel makes an image to download and set in the YouTube app. The official game logo is never used; the game name is drawn in Reclip's own lettering. Run `npm run setup:faces` once to download the face models.
 
 An upload log stops the same file from being uploaded twice, unless you choose **Upload anyway**. Scheduled times currently use UTC+8. See [docs/AUTOMATION.md](docs/AUTOMATION.md) for live-stream capture, repeatable automation scripts and their limits.
 
 ## Optional: posting to TikTok
 
-OpenClip can send portrait exports to your **TikTok inbox**; you then open the TikTok app, add the caption and publish. Set it up once in **Automation → TikTok setup** with your own TikTok for Developers app, then pick **TikTok** on a post in the **Posting calendar**. The full steps and limits are in [docs/AUTOMATION.md](docs/AUTOMATION.md#connect-tiktok-for-inbox-uploads).
+Reclip can send portrait exports to your **TikTok inbox**; you then open the TikTok app, add the caption and publish. Set it up once in **Automation → TikTok setup** with your own TikTok for Developers app, then pick **TikTok** on a post in the **Posting calendar**. The full steps and limits are in [docs/AUTOMATION.md](docs/AUTOMATION.md#connect-tiktok-for-inbox-uploads).
 
-## Updating OpenClip
+## Updating Reclip
 
-Press **Check for updates** in the top bar. It compares your copy with GitHub, lists what's new and gives the commands to run. To update, stop OpenClip (`Ctrl+C`), then in the OpenClip folder run:
+Press **Check for updates** in the top bar. It compares your copy with GitHub, lists what's new and gives the commands to run. To update, stop Reclip (`Ctrl+C`), then in the Reclip folder run:
 
 ```powershell
 git pull
@@ -355,15 +348,15 @@ npm run setup:references                                             # optional:
 
 - **"node", "python", "ffmpeg" or "git" is not recognized.** Close the terminal and open a new one after installing. If it still fails, the program's folder isn't on your `PATH`: reinstall it, and for Python tick *Add python.exe to PATH*. On Windows, `python` can also open the Microsoft Store instead. Turn that off under *Settings > Apps > Advanced app settings > App execution aliases*.
 - **Every job fails during transcription (often on a Mac).** The project's Python environment was made with a Python older than 3.11. macOS comes with Python 3.9. Run `npm run setup` again: it finds Python 3.11–3.13 (or uses uv) and rebuilds the environment. If it says no such Python was found, run `brew install uv` and run setup again.
-- **My API key isn't picked up.** The home page says which keys OpenClip found and what is wrong with the settings file. The usual causes: the key line still starts with `#`; the file is really named `.env.txt` (Windows hides extensions, so turn on *View > File name extensions*); or the key is not right after the `=` (for example `GEMINI_API_KEY=AIza...`). OpenClip reads `.env` from its own folder, including files PowerShell saved as UTF-16, and picks up changes by itself. `npm run build` and `npm run setup` are not needed for a new key.
+- **My API key isn't picked up.** The home page says which keys Reclip found and what is wrong with the settings file. The usual causes: the key line still starts with `#`; the file is really named `.env.txt` (Windows hides extensions, so turn on *View > File name extensions*); or the key is not right after the `=` (for example `GEMINI_API_KEY=AIza...`). Reclip reads `.env` from its own folder, including files PowerShell saved as UTF-16, and picks up changes by itself. `npm run build` and `npm run setup` are not needed for a new key.
 - **Transcription crashes on Windows ("Windows error 0xC0000005", or `python.exe failed (3221225477)`).** The speech engine needs a current Microsoft Visual C++ Runtime, and an older one makes it crash as the model loads. Install the latest from <https://aka.ms/vs/17/release/vc_redist.x64.exe>, restart the computer, then press **Retry job**. `npm run setup` checks the runtime version and warns when it is too old.
 - **Setup fails installing faster-whisper.** Your Python is probably too new (3.14 or later). Install Python 3.12, or install uv, then delete the `.venv` folder and run `npm run setup` again.
-- **"Edit didn't render" with "Unrecognized option 'filter_complex_script'".** Your FFmpeg is newer than your copy of OpenClip expects. Update OpenClip (see *Updating OpenClip*), then press **Retry** on the clips.
+- **"Edit didn't render" with "Unrecognized option 'filter_complex_script'".** Your FFmpeg is newer than your copy of Reclip expects. Update Reclip (see *Updating Reclip*), then press **Retry** on the clips.
 - **Captions don't render, or setup complains about libass.** Install a full FFmpeg build and make sure it's first on your `PATH`.
 - **A YouTube, Twitch or Kick link fails.** These sites change often. Run `npm run setup` to update yt-dlp, or download the video and drop the file in instead. Private, members-only, subscriber-only and DRM videos aren't supported. For a Kick stream, wait until it has ended.
 - **A clip has a "Blurry" warning.** For long or live streams each clip is rendered from a 1080p download of its part. If the platform only offered a low quality, or that download failed, the clip is made from the light copy and marked. Render it again later to retry; auto-post skips these clips.
-- **Twitch live chat.** When you import a Twitch channel that is live, OpenClip reads its public chat (anonymously, text only, no usernames) and uses chat spikes to find moments when you paste the link again later.
-- **Twitch: favour what viewers clipped.** Add your own free Twitch app's `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` to `.env` (see `.env.example`). For Twitch VODs, OpenClip then reads the clips viewers made of the broadcast and ranks those moments higher; each such clip says "Viewers clipped this" with the view count.
+- **Twitch live chat.** When you import a Twitch channel that is live, Reclip reads its public chat (anonymously, text only, no usernames) and uses chat spikes to find moments when you paste the link again later.
+- **Twitch: favour what viewers clipped.** Add your own free Twitch app's `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` to `.env` (see `.env.example`). For Twitch VODs, Reclip then reads the clips viewers made of the broadcast and ranks those moments higher; each such clip says "Viewers clipped this" with the view count.
 - **Face follow falls back to center.** Run `npm run setup:faces`. Dark scenes, side profiles and fast motion can still fall back to center.
 - **Port 5173 is in use.** Set `PORT=5180` (or another free port) in `.env`.
 - **Disk space.** Each project lives in `work/<project id>/`. Delete old projects with the trash icon next to them in the sidebar; it removes their files too.
@@ -386,6 +379,8 @@ Contributions are welcome. Good starting points: moment selection quality, more 
 
 ## License
 
+Reclip is a fork of [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos (MIT). The original copyright notice is kept in [LICENSE](LICENSE).
+
 MIT for the original project code; see [LICENSE](LICENSE). Fonts, sounds, dependencies and external programs keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The meme sounds and the skull artwork are original and generated in code.
 
-The example clips and screenshots use footage from **Tears of Steel**, (CC) Blender Foundation | [mango.blender.org](https://mango.blender.org), licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The clips are short excerpts cropped to 9:16, with captions, titles and effects added by OpenClip. No other third-party video, music or branding is included.
+The example clips and screenshots use footage from **Tears of Steel**, (CC) Blender Foundation | [mango.blender.org](https://mango.blender.org), licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The clips are short excerpts cropped to 9:16, with captions, titles and effects added by Reclip. No other third-party video, music or branding is included.

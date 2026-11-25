@@ -1,6 +1,6 @@
 ---
 name: clip-template
-description: Add or change an OpenClip edit template (the cards in the template gallery, for example Cam Split) - settings, any new render option, demo card, tests and verification. Use when the owner asks for a new editing style or layout.
+description: Add or change an Reclip edit template (the cards in the template gallery, for example Cam Split) - settings, any new render option, demo card, tests and verification. Use when the owner asks for a new editing style or layout.
 ---
 
 # Add an edit template
@@ -28,6 +28,6 @@ Templates are presets of render settings in `presets/edits.json`, applied with `
    `scripts/make-cam-split-demo.mjs`, into `web/public/templates/<id>.mp4/.jpg`.
 6. **Tests.** Update the template count in `tests/templates.test.mjs` and `tests/api.test.mjs`; add unit tests for
    any new option and its filter graph (see `tests/stack.test.mjs`).
-7. **Verify on real footage.** Render a real clip with the template (`run-openclip-job`, `verify-clips`), look at the
+7. **Verify on real footage.** Render a real clip with the template (`run-reclip-job`, `verify-clips`), look at the
    frames, then `npm test`, `npm run lint`, `npm run build`. Restart the server so it reads the new template.
 8. Log the decision and what was rejected in `NOTES.md`.

@@ -32,3 +32,4 @@ scripts/check-*.mjs
 scripts/final-*.mjs
 scripts/audit-*.mjs
 scripts/start-full-*.mjs
+.claude/launch.json

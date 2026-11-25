@@ -49,7 +49,7 @@ export default function PostDialog({job,clip,onClose,onReexport,onConnect}:{job:
     <button type="button" aria-pressed={destination==='youtube'} disabled={busy||preparingTikTok} onClick={()=>{setDestination('youtube');if(pub)setError('');}}><MonitorPlay size={17}/>YouTube</button>
     <button type="button" aria-pressed={destination==='tiktok'} disabled={busy||preparingTikTok} onClick={()=>{setDestination('tiktok');if(pub)setError('');}}><Smartphone size={17}/>TikTok</button>
    </div>}
-   {pub?.exported&&!post&&<PostPreview job={job} clipId={clip.id} portrait={portrait} note={destination==='tiktok'?'TikTok lets you pick the cover in its app before you publish.':postAs==='video'?'After you save, OpenClip makes an automatic thumbnail from the streamer’s biggest reaction. Change it in the Posting calendar (Edit).':'YouTube lets you choose a Short’s thumbnail only in its mobile app, after the upload. This is the frame it starts on.'}/>}
+   {pub?.exported&&!post&&<PostPreview job={job} clipId={clip.id} portrait={portrait} note={destination==='tiktok'?'TikTok lets you pick the cover in its app before you publish.':postAs==='video'?'After you save, Reclip makes an automatic thumbnail from the streamer’s biggest reaction. Change it in the Posting calendar (Edit).':'YouTube lets you choose a Short’s thumbnail only in its mobile app, after the upload. This is the frame it starts on.'}/>}
    {!pub&&!error&&<p className="loading-words"><Loader2 className="spin" size={16}/>Writing the title and description…</p>}
    {pub&&destination==='tiktok'&&<div className="post-destination-details">
     <p>TikTok receives the finished portrait video in your Inbox, where you can review and publish it.</p>

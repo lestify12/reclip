@@ -16,7 +16,7 @@ No Google credentials are included.
 ## Connect TikTok for inbox uploads
 
 1. Register a Desktop app in [TikTok for Developers](https://developers.tiktok.com/apps/). Add [Desktop Login Kit](https://developers.tiktok.com/docs/en/login-kit-desktop) and the [Content Posting API](https://developers.tiktok.com/docs/en/content-posting-api-get-started-upload-content). Request `user.info.basic` and `video.upload`; TikTok must approve video upload access for the app.
-2. In **Automation → TikTok setup**, copy the redirect URI displayed for your local OpenClip address. Register that exact URI in Desktop Login Kit. Save your TikTok Client key and Client secret in the dialog, then choose **Connect TikTok** and authorize the account.
+2. In **Automation → TikTok setup**, copy the redirect URI displayed for your local Reclip address. Register that exact URI in Desktop Login Kit. Save your TikTok Client key and Client secret in the dialog, then choose **Connect TikTok** and authorize the account.
 3. In **Posting calendar**, select **TikTok** on a portrait export you’re authorized to share. Review the video and edit the separate TikTok caption and hashtags. Use **Save caption** to keep your edits and **Copy caption** to paste them into TikTok.
 4. Confirm the upload and choose **Send to TikTok Inbox**. Use **Check TikTok status** to check delivery, then open the Inbox notification to paste the caption and publish in TikTok. YouTube scheduling works independently.
 

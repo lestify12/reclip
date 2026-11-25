@@ -4,7 +4,7 @@ import type {Job,Cut} from './types';import {clock,parseClock} from './logic.mjs
 import {OUTPUT,PRESETS,defaultLayout,applyPreset,withPanel,withCamera,pixelAspect,shareRatio,coverSource,sameShapeLayout,refit} from './cutlayout.mjs';
 import {TEXT_FONTS,newText,drawTexts,loadFonts,textLayer,drawCaption,type TextItem,type CaptionLook} from './cutText';
 import {cleanCaption,CAPTION_PRESETS,captionGroups,captionAt,wordKey,cutFont} from './cutCaptions.mjs';
-import CutBox from './CutBox';import {askTip} from './TipJar';
+import CutBox from './CutBox';
 import {TikTokExport} from './TikTokExport';
 import './cutter.css';
 
@@ -30,9 +30,9 @@ const isTyping=(el:EventTarget|null)=>{const e=el as HTMLElement|null;return !!e
 async function call<T>(url:string,init?:RequestInit):Promise<T>{const r=await fetch(url,{...init,headers:{'Content-Type':'application/json',...init?.headers}});const type=r.headers.get('content-type')||'';if(!type.includes('json'))throw new Error(r.status===404?'The app server is running an older version. Restart it (Ctrl+C, then npm start).':`Request failed (${r.status})`);const body=await r.json();if(!r.ok)throw new Error(body.error||`Request failed (${r.status})`);return body as T;}
 // Drafts live in browser storage: parts, and the look (shape, framing, boxes, text). A convenience only.
 const store={get<T>(key:string,fallback:T):T{try{const v=localStorage.getItem(key);return v?JSON.parse(v) as T:fallback;}catch{return fallback;}},set(key:string,value:unknown){try{localStorage.setItem(key,JSON.stringify(value));}catch{/* storage can be blocked */}}};
-function loadDraft(id:string):Seg[]{const v=store.get<unknown>(`openclip-cut-${id}`,[]);return Array.isArray(v)?v.filter(s=>Number.isFinite(s?.start)&&Number.isFinite(s?.end)&&s.end>s.start):[];}
-function saveDraft(id:string,segs:Seg[]){if(segs.length)store.set(`openclip-cut-${id}`,segs);else try{localStorage.removeItem(`openclip-cut-${id}`);}catch{/* ignore */}}
-function loadLook(job:Job):Look{const v=store.get<Partial<Look>>(`openclip-cut-look-${job.id}`,{});const format:Format=v.format==='video'||v.format==='shorts'?v.format:job.options.outputFormat==='video'?'video':'shorts';
+function loadDraft(id:string):Seg[]{const v=store.get<unknown>(`reclip-cut-${id}`,[]);return Array.isArray(v)?v.filter(s=>Number.isFinite(s?.start)&&Number.isFinite(s?.end)&&s.end>s.start):[];}
+function saveDraft(id:string,segs:Seg[]){if(segs.length)store.set(`reclip-cut-${id}`,segs);else try{localStorage.removeItem(`reclip-cut-${id}`);}catch{/* ignore */}}
+function loadLook(job:Job):Look{const v=store.get<Partial<Look>>(`reclip-cut-look-${job.id}`,{});const format:Format=v.format==='video'||v.format==='shorts'?v.format:job.options.outputFormat==='video'?'video':'shorts';
  return {format,framing:['fill','fit','split'].includes(String(v.framing))?v.framing as Framing:format==='video'?'fit':'fill',layouts:{shorts:sameShapeLayout(v.layouts?.shorts)?v.layouts!.shorts:null,video:sameShapeLayout(v.layouts?.video)?v.layouts!.video:null},texts:Array.isArray(v.texts)?v.texts.filter(t=>t&&typeof t.text==='string'):[],captions:capState(v.captions)};}
 const mb=(n?:number)=>n?`${(n/1e6).toFixed(n>1e8?0:1)} MB`:'';
 
@@ -88,7 +88,7 @@ function CutterFor({job,jobs,onPick,onChanged,onOpenCalendar,onConnectPosting}:{
  const [selected,setSelected]=useState<string|null>(null),[camBusy,setCamBusy]=useState(false),[camNote,setCamNote]=useState(''),[bounds,setBounds]=useState<Record<string,Box>>({});
  const proxy=!!job.remote?.proxy,[hd,setHdRaw]=useState<HdSection[]>([]),hdRef=useRef<HdSection[]>([]),[hdBusy,setHdBusy]=useState(''),[hdNote,setHdNote]=useState(''),[sourceSide,setSourceSide]=useState<number|null>(null);
  const [src,setSrc]=useState<HdSection|null>(null),srcRef=useRef<HdSection|null>(null),pendingSeek=useRef<{t:number;play:boolean}|null>(null);
- const [quality,setQualityRaw]=useState<Quality>(()=>{const q=Number(store.get('openclip-cut-quality',1080));return isQuality(q)?q:1080;});const setQuality=(q:Quality)=>{setQualityRaw(q);store.set('openclip-cut-quality',q);};
+ const [quality,setQualityRaw]=useState<Quality>(()=>{const q=Number(store.get('reclip-cut-quality',1080));return isQuality(q)?q:1080;});const setQuality=(q:Quality)=>{setQualityRaw(q);store.set('reclip-cut-quality',q);};
  const [showCameraPixels,setShowCameraPixels]=useState(false),cameraCanvas=useRef<HTMLCanvasElement>(null),[cameraPreviewBusy,setCameraPreviewBusy]=useState(false);
  const cameraRequest=useRef(false),unplayable=useRef(new Set<string>());
  const [cs,setCs]=useState(360);
@@ -104,7 +104,7 @@ function CutterFor({job,jobs,onPick,onChanged,onOpenCalendar,onConnectPosting}:{
  const [capWords,setCapWords]=useState<{key:string;words:CapWord[][]}|null>(null),[capBusy,setCapBusy]=useState(false),[capNote,setCapNote]=useState(''),[fixing,setFixing]=useState<string|null>(null);
  const {format,framing,texts}=look,captions=look.captions||capState(null),[sw,sh]=size,out=OUTPUT[format],layout:Layout=(look.layouts[format]||defaultLayout(format,sw,sh)) as Layout,split=framing==='split';
  const setSegs=(next:Seg[])=>{setSegsRaw(next);saveDraft(job.id,next);};
- const setLook=(patch:Partial<Look>)=>setLookRaw(old=>{const next={...old,...patch};store.set(`openclip-cut-look-${job.id}`,next);return next;});
+ const setLook=(patch:Partial<Look>)=>setLookRaw(old=>{const next={...old,...patch};store.set(`reclip-cut-look-${job.id}`,next);return next;});
  const setLayout=(next:Layout)=>setLook({layouts:{...look.layouts,[format]:next}});
  const setTexts=(next:TextItem[])=>setLook({texts:next});
  const setCaptions=(patch:Partial<CaptionState>)=>setLook({captions:{...captions,...patch}});
@@ -210,7 +210,7 @@ function CutterFor({job,jobs,onPick,onChanged,onOpenCalendar,onConnectPosting}:{
  const editText=(id:string,patch:Partial<TextItem>)=>setTexts(texts.map(x=>x.id===id?{...x,...patch}:x));
  function addText(){const t=newText(texts.length);setTexts([...texts,t]);setSelected(t.id);}
  // Export.
- async function exportCut(){askTip();setSending(true);setError('');try{const overlay=await textLayer(texts,exportSize.width,exportSize.height);
+ async function exportCut(){setSending(true);setError('');try{const overlay=await textLayer(texts,exportSize.width,exportSize.height);
   await call<Cut>(`/api/jobs/${job.id}/cuts`,{method:'POST',body:JSON.stringify({segments:segs,format,quality,framing,title,layout:split?layout:undefined,overlay:overlay||undefined,texts,captions:captions.on?{...captions.look,edits:captions.edits}:undefined})});onChanged(await call<Job>(`/api/jobs/${job.id}`));}
   catch(e){setError((e as Error).message);}finally{setSending(false);}}
  // Post: the cut goes to the Posting calendar as a private draft (title, schedule and upload are set there).

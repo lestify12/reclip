@@ -39,11 +39,11 @@ Burned-in title font: **Montserrat** Black and ExtraBold (Copyright 2011 The Mon
 
 Glow Card caption font: **Luckiest Guy** (Copyright 2010 Brian J. Bonislawsky DBA Astigmatic), Apache License 2.0, downloaded from the official [Google Fonts repository](https://github.com/google/fonts/tree/main/apache/luckiestguy) (SHA-256 cfbdd68a039f92df51cf3721506af6242e64594c6325fe0bedbeff3fe385d980). The license accompanies the font as `assets/fonts/LuckiestGuy-LICENSE.txt` and `web/public/fonts/LuckiestGuy-LICENSE.txt`. The Glow Card frame art (`assets/overlays/`) is original, drawn by `scripts/make-cam-card.py`.
 
-Example media in `docs/media/` (screenshots, GIF previews and MP4 examples) contains excerpts of **Tears of Steel**, (CC) Blender Foundation | mango.blender.org, licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/). Changes: short excerpts, cropped to 9:16, re-encoded, with captions, titles, colour effects and original synthesized sounds added by OpenClip. The film itself is not bundled.
+Example media in `docs/media/` (screenshots, GIF previews and MP4 examples) contains excerpts of **Tears of Steel**, (CC) Blender Foundation | mango.blender.org, licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/). Changes: short excerpts, cropped to 9:16, re-encoded, with captions, titles, colour effects and original synthesized sounds added by Reclip. The film itself is not bundled.
 
 ## VoltAgent awesome-claude-code-subagents (MIT)
 
 `.claude/agents/debugger.md`, `performance-engineer.md`, `python-pro.md`, `qa-expert.md` and `react-specialist.md`
 are adapted from https://github.com/VoltAgent/awesome-claude-code-subagents (commit ed74d115), Copyright (c) 2025
-VoltAgent, MIT License. Each file has an added "OpenClip project rules" block. Full licence text:
+VoltAgent, MIT License. Each file has an added "Reclip project rules" block. Full licence text:
 `.claude/agents/licenses/VoltAgent-LICENSE.txt`. These are development aids for Claude Code, not part of the app.

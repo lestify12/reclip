@@ -1,9 +1,9 @@
 {
-  "name": "open-clip-editor",
+  "name": "reclip",
   "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "Local YouTube and long-video clipping, captions and creator editing",
+  "description": "Reclip: local clip editor for streams and long videos, with captions, templates and posting",
   "license": "MIT",
   "engines": {
     "node": ">=20.19.0"

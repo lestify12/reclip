@@ -2,7 +2,7 @@
 import fs from 'node:fs';import path from 'node:path';
 import {run} from './process.mjs';import {ROOT} from './config.mjs';
 
-export const REPO_URL='https://github.com/jaspher19/open-clip-editor';
+export const REPO_URL='https://github.com/lestify12/reclip';
 const git=(args,opts={})=>run('git',args,{cwd:ROOT,timeout:45000,...opts}).then(r=>String(r.stdout).trim());
 
 /** {status:'current'|'behind'|'ahead'|'diverged'|'unknown', current, latest, behind, ahead, commits, dependencies, dirty, message} */

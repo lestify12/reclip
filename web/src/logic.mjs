@@ -4,7 +4,7 @@ export function downloadableIds(job){return job.clips.filter(c=>c.kept&&!c.dirty
 // Settings the user changed after choosing a template; unset keys keep the template value.
 export function templateChanges(value,template){return template?Object.keys(template.settings).filter(k=>value[k]!==undefined&&JSON.stringify(value[k])!==JSON.stringify(template.settings[k])):[];}
 // Per-template memory of the user's tweaks. Browser storage may be unavailable; memory is a convenience only.
-const TWEAKS_KEY='openclip.templateTweaks';
+const TWEAKS_KEY='reclip.templateTweaks';
 export function loadTweaks(storage=globalThis.localStorage){try{return JSON.parse(storage?.getItem(TWEAKS_KEY)||'{}')||{};}catch{return {};}}
 export function saveTweaks(id,value,template,storage=globalThis.localStorage){if(!id||!template)return;const all=loadTweaks(storage),keys=templateChanges(value,template),next={...all};if(keys.length)next[id]=Object.fromEntries(keys.map(k=>[k,value[k]]));else delete next[id];if(JSON.stringify(next)!==JSON.stringify(all))try{storage?.setItem(TWEAKS_KEY,JSON.stringify(next));}catch{/* private mode or full storage */}}
 // Meme-only effects are off unless the chosen template turns them on (mirrors server/templates.mjs).

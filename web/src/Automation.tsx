@@ -36,7 +36,7 @@ export default function Automation({templates,cachedModels,onOpenJob}:{templates
   }catch(e){setSetupError((e as Error).message);}
   finally{setBusy('');}
  }
- async function connect(){const win=window.open('','openclip-youtube','width=620,height=760');setBusy('connect');setError('');try{const data=await request<{url:string}>('/api/youtube/connect','POST',{});if(win)win.location.href=data.url;else window.location.href=data.url;}catch(e){win?.close();setError((e as Error).message);}finally{setBusy('');}}
+ async function connect(){const win=window.open('','reclip-youtube','width=620,height=760');setBusy('connect');setError('');try{const data=await request<{url:string}>('/api/youtube/connect','POST',{});if(win)win.location.href=data.url;else window.location.href=data.url;}catch(e){win?.close();setError((e as Error).message);}finally{setBusy('');}}
  async function save(run:boolean){setBusy('save');setError('');setMessage('');try{const body=jsonMode?JSON.parse(json):recipe;const script=await request<Script>(editId?`/api/automations/${editId}`:'/api/automations',editId?'PUT':'POST',body);if(run)await request(`/api/automations/${script.id}/start`,'POST',{});setEditId(null);setMessage(run?'Workflow started. You can follow each stage below.':'Script saved. Start it when ready.');await refresh();}catch(e){setError((e as Error).message);}finally{setBusy('');}}
  async function action(id:string,action:string,body={}){setBusy(id);setError('');try{await request(`/api/automations/${id}/${action}`,'POST',body);await refresh();}catch(e){setError((e as Error).message);}finally{setBusy('');}}
  return <section className="automation-page"><div className="project-heading"><div><div className="source-kind"><Settings2 size={16}/>Automation studio</div><h1>A link. A repeatable workflow.</h1><p>Capture → clip → edit → prepare metadata → upload privately.</p></div></div>
@@ -62,7 +62,7 @@ export default function Automation({templates,cachedModels,onOpenJob}:{templates
      e.currentTarget.value='';
      if(file)void readClientFile(file);
     }}/></label>
-    <p id="youtube-setup-hint">OpenClip saves your credentials locally. After saving, choose Connect YouTube to authorize your channel.</p>
+    <p id="youtube-setup-hint">Reclip saves your credentials locally. After saving, choose Connect YouTube to authorize your channel.</p>
     {setupError&&<p className="trim-warning" role="alert">{setupError}</p>}
     <footer>
      <button type="button" className="secondary" disabled={setupBusy} onClick={()=>setupDialog.current?.close()}>Cancel</button>

@@ -71,7 +71,7 @@ type Effect = {
 |---|---|---|
 | `web/src/readiness.mjs` | moments | `readiness(clip, job, exportInfo?)` → `{ok, checks:[{id,label,pass,fix}]}` |
 | `web/src/ReadyCheck.tsx` | moments | `ReadyCheck({clip, job, compact?})` |
-| `web/src/StreamTimeline.tsx` | moments | `StreamTimeline({job, onAdded, onOpenClip})` for the project page |
+| `web/src/StreamTimeline.tsx` | moments | `StreamTimeline({job, onAdded, onReclip})` for the project page |
 | `web/src/EffectsLane.tsx` | editor | `EffectsLane(...)` inside the clip editor |
 | `web/src/ThumbnailPicker.tsx` | publishing | `ThumbnailPicker({post, onSaved})` for the Edit post dialog |
 

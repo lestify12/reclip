@@ -18,7 +18,7 @@ await run('ffmpeg',['-v','error','-y','-i',sourcePath,'-vn','-ac','1','-ar','160
 const words='No way he actually pulled that off in the last second, chat'.split(' ').map((text,i)=>({text,start:.3+i*.68,end:.3+(i+1)*.68-.05}));
 const transcript={words};fs.writeFileSync(path.join(folder,'transcript.json'),JSON.stringify(transcript));
 const options=validateOptions(applyTemplate(id,{},{camBox:[0,.125,.25,.25],hookText:'He did NOT expect that',musicEnabled:false}));
-const job={options,sourcePath,title:'Original OpenClip demo',source:{},silences:[],clips:[],metadata:{width:1280,height:720}};
+const job={options,sourcePath,title:'Original Reclip demo',source:{},silences:[],clips:[],metadata:{width:1280,height:720}};
 const clip={id:`${id}-demo`,start:0,end:9,title:`${id} demo`,hook:'',score:80,kept:true,settings:options};
 const out=await renderClip(job,clip,transcript,{folder});
 const file=path.join(folder,'exports',out.filename);fs.copyFileSync(file,path.join(publicDir,`${id}.mp4`));

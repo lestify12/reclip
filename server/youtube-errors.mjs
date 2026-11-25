@@ -1,7 +1,7 @@
 // Plain-language explanations for what Google says during YouTube setup and uploads. Each names the cause and the fix
 // as the user sees it (docs/YOUTUBE-SETUP.md has the same list with more detail).
 
-export const SETUP_GUIDE='https://github.com/jaspher19/open-clip-editor/blob/master/docs/YOUTUBE-SETUP.md';
+export const SETUP_GUIDE='https://github.com/lestify12/reclip/blob/master/docs/YOUTUBE-SETUP.md';
 
 const FIXES={
  // OAuth (sign-in) errors
@@ -9,16 +9,16 @@ const FIXES={
  client_user_mismatch:'You signed in with a different Google account than the one that made the app. A Personal app only works for the account that created it. Click Connect YouTube again and choose that account (or make a new app while signed in to the channel’s account).',
  admin_policy_enforced:'Your Google Workspace administrator blocks this app. Ask them to allow it, or use a personal Google account that owns the channel.',
  org_internal:'This app is set to Internal, so only accounts in its organisation can sign in. Make a new app with the Personal setup page instead.',
- invalid_client:'Google doesn’t recognise the saved app details. The client was deleted or its secret changed. Download a new JSON (Google Auth Platform → Clients), save it in OpenClip and connect again.',
- deleted_client:'The Google client in your JSON was deleted. Create a new Desktop app client, download its JSON, save it in OpenClip and connect again.',
+ invalid_client:'Google doesn’t recognise the saved app details. The client was deleted or its secret changed. Download a new JSON (Google Auth Platform → Clients), save it in Reclip and connect again.',
+ deleted_client:'The Google client in your JSON was deleted. Create a new Desktop app client, download its JSON, save it in Reclip and connect again.',
  unauthorized_client:'This client can’t be used for this sign-in. Make sure it is a Desktop app client, then download its JSON again.',
- invalid_grant:'Google ended OpenClip’s access (the sign-in expired or was removed, or the password changed). External apps in Testing expire every 7 days. Click Disconnect, then Connect YouTube again; a Personal app avoids the weekly expiry.',
- redirect_uri_mismatch:'The JSON is for a Web application client. Create a client with Application type “Desktop app”, download its JSON and save that in OpenClip.',
+ invalid_grant:'Google ended Reclip’s access (the sign-in expired or was removed, or the password changed). External apps in Testing expire every 7 days. Click Disconnect, then Connect YouTube again; a Personal app avoids the weekly expiry.',
+ redirect_uri_mismatch:'The JSON is for a Web application client. Create a client with Application type “Desktop app”, download its JSON and save that in Reclip.',
  // YouTube Data API errors
  accessNotConfigured:'YouTube Data API v3 is turned off for your Google Cloud project. Open the API page, check that your project is selected at the top, click Enable, wait two minutes and try again.',
  SERVICE_DISABLED:'YouTube Data API v3 is turned off for your Google Cloud project. Open the API page, check that your project is selected at the top, click Enable, wait two minutes and try again.',
- insufficientPermissions:'OpenClip wasn’t given permission to upload. Click Disconnect, then Connect YouTube again, and tick every box on Google’s permission page.',
- ACCESS_TOKEN_SCOPE_INSUFFICIENT:'OpenClip wasn’t given permission to upload. Click Disconnect, then Connect YouTube again, and tick every box on Google’s permission page.',
+ insufficientPermissions:'Reclip wasn’t given permission to upload. Click Disconnect, then Connect YouTube again, and tick every box on Google’s permission page.',
+ ACCESS_TOKEN_SCOPE_INSUFFICIENT:'Reclip wasn’t given permission to upload. Click Disconnect, then Connect YouTube again, and tick every box on Google’s permission page.',
  youtubeSignupRequired:'This Google account has no YouTube channel yet. Create one at youtube.com (profile picture → Create a channel), then connect again.',
  quotaExceeded:'Your Google project used up today’s free YouTube quota (about 6 uploads a day). Uploads work again after midnight Pacific Time.',
  dailyLimitExceeded:'Your Google project used up today’s free YouTube quota (about 6 uploads a day). Uploads work again after midnight Pacific Time.',

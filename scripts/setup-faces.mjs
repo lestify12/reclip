@@ -65,7 +65,7 @@ function repair(t){
 function explain(t){
  const e=String(t.error||'');
  if(/DLL load failed|_framework_bindings|msvcp|vcruntime/i.test(e))return 'Windows is missing the Microsoft Visual C++ Redistributable that MediaPipe needs.\n  Install it from https://aka.ms/vs/17/release/vc_redist.x64.exe, restart the computer, then run npm run setup:faces again.';
- if(/No module named ['"]?mediapipe/i.test(e))return `MediaPipe isn't installed in OpenClip's Python ${t.python||''}. Run npm run setup:faces again; if it still fails, OpenClip's Python may be too new for MediaPipe: delete the .venv folder, install Python 3.12, then run npm run setup and npm run setup:faces.`;
+ if(/No module named ['"]?mediapipe/i.test(e))return `MediaPipe isn't installed in Reclip's Python ${t.python||''}. Run npm run setup:faces again; if it still fails, Reclip's Python may be too new for MediaPipe: delete the .venv folder, install Python 3.12, then run npm run setup and npm run setup:faces.`;
  return `The face tools didn't pass their test: ${e.slice(0,300)}\n  Run npm run setup:faces again. If it keeps failing, open an issue with this message.`;
 }
 
@@ -80,5 +80,5 @@ try{
  for(let attempt=0;!t.ok&&attempt<2;attempt++){const fixed=repair(t);if(!fixed)break;if(fixed==='models')await downloadModels();t=selfTest();}
  if(!t.ok)throw new Error(explain(t));
  console.log(`  MediaPipe ${t.mediapipe} · ${t.opencv.join(', ')} · Python ${t.python}: face detection works.`);
- console.log('\nFace follow, Cam Split and automatic thumbnails are ready (MediaPipe models, Apache-2.0).\nRestart OpenClip if it is running, then render the Cam Split clips again.');
-}catch(e){console.error(`\nFace setup stopped: ${e.message}\nOpenClip works without it; only face follow, Cam Split and automatic thumbnails need it.`);process.exitCode=1;}
+ console.log('\nFace follow, Cam Split and automatic thumbnails are ready (MediaPipe models, Apache-2.0).\nRestart Reclip if it is running, then render the Cam Split clips again.');
+}catch(e){console.error(`\nFace setup stopped: ${e.message}\nReclip works without it; only face follow, Cam Split and automatic thumbnails need it.`);process.exitCode=1;}

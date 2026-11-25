@@ -1,6 +1,6 @@
 # Static landing page
 
-From the project root run `npm ci --cache .cache/npm`, then `npm run package:source`. This creates `site/downloads/open-clip-editor-source.zip` from Git-tracked source files; private work and keys are excluded. Regenerate it after changing tracked files.
+From the project root run `npm ci --cache .cache/npm`, then `npm run package:source`. This creates `site/downloads/reclip-source.zip` from Git-tracked source files; private work and keys are excluded. Regenerate it after changing tracked files.
 
 Serve or upload the **complete `site/` directory**, including generated `downloads/`, as the static site root. It contains its own fonts, poster, GIF and MP4. No backend is required for this page. The app itself runs locally after the source is extracted and installed.
 

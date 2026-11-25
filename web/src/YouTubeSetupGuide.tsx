@@ -5,7 +5,7 @@ import {Check,ExternalLink,TriangleAlert,ChevronRight} from 'lucide-react';
 // 15549945, 15549257). The Personal setup page (console.cloud.google.com/auth/overview/personal) makes the project and
 // a Desktop client in one go; Personal apps need no test users, show no "unverified app" screen and don't expire
 // every 7 days. The same guide, longer, is docs/YOUTUBE-SETUP.md.
-export const FULL_GUIDE='https://github.com/jaspher19/open-clip-editor/blob/master/docs/YOUTUBE-SETUP.md';
+export const FULL_GUIDE='https://github.com/lestify12/reclip/blob/master/docs/YOUTUBE-SETUP.md';
 const PERSONAL='https://console.cloud.google.com/auth/overview/personal';
 const API='https://console.cloud.google.com/apis/library/youtube.googleapis.com';
 
@@ -21,7 +21,7 @@ const steps:Step[]=[
   </ol>
   <p className="yt-tip">No billing or credit card is needed for any of this.</p></>},
  {id:'client',label:'Make your app',link:{label:'Open Google’s Personal setup page',href:PERSONAL},body:<>
-  <p>Google has one page that makes everything OpenClip needs. Open it with the button below and sign in with the channel’s account.</p>
+  <p>Google has one page that makes everything Reclip needs. Open it with the button below and sign in with the channel’s account.</p>
   <ol>
    <li><strong>Project:</strong> keep the suggested one (<em>personal-mode-app</em>) or pick <strong>Create a new project</strong>.</li>
    <li><strong>Application type:</strong> choose <strong>Desktop app</strong> (not Web application).</li>
@@ -32,7 +32,7 @@ const steps:Step[]=[
    <p>Use the classic way instead:</p>
    <ol>
     <li>Create a project at <A href="https://console.cloud.google.com/projectcreate">console.cloud.google.com/projectcreate</A>.</li>
-    <li>Open <A href="https://console.cloud.google.com/auth/overview">Google Auth Platform</A> → <strong>Get started</strong>. App name <em>OpenClip</em>, your email as support email, Audience <strong>External</strong>, your email as contact, agree, <strong>Create</strong>.</li>
+    <li>Open <A href="https://console.cloud.google.com/auth/overview">Google Auth Platform</A> → <strong>Get started</strong>. App name <em>Reclip</em>, your email as support email, Audience <strong>External</strong>, your email as contact, agree, <strong>Create</strong>.</li>
     <li>Open <strong>Audience</strong> → <strong>Test users</strong> → <strong>Add users</strong> and add <strong>the channel’s email</strong>. Without this, Google says “Access blocked”.</li>
     <li>Open <A href="https://console.cloud.google.com/auth/clients">Clients</A> → <strong>Create client</strong> → <strong>Desktop app</strong> → <strong>Create</strong> → <strong>Download JSON</strong>.</li>
    </ol>
@@ -46,7 +46,7 @@ const steps:Step[]=[
    <li>Click <strong>Enable</strong>. If you see <strong>Manage</strong> instead, it’s already on. Give it a minute before connecting.</li>
   </ol></>},
  {id:'json',label:'Add JSON',body:<>
-  <p>Now give the file to OpenClip, using the box below this guide.</p>
+  <p>Now give the file to Reclip, using the box below this guide.</p>
   <ol>
    <li>Click <strong>Choose JSON file</strong> and pick the <code>client_secret_….json</code> from your Downloads (or open it in Notepad and paste everything into the box).</li>
    <li>Click <strong>Save credentials</strong>. It stays on this computer only.</li>
@@ -56,10 +56,10 @@ const steps:Step[]=[
    <li>Close this window and click <strong>Connect YouTube</strong>. A Google tab opens.</li>
    <li>Pick <strong>the channel’s Google account</strong>. If you manage several channels, pick the right one.</li>
    <li>On the permission page, <strong>tick every box</strong> and click <strong>Continue</strong>.</li>
-   <li>The tab says <strong>YouTube connected</strong>. Close it; OpenClip shows your channel name.</li>
+   <li>The tab says <strong>YouTube connected</strong>. Close it; Reclip shows your channel name.</li>
   </ol>
-  <p className="yt-tip">Classic (External) app only: Google first says <em>“Google hasn’t verified this app”</em>. Click <strong>Advanced</strong> → <strong>Go to OpenClip (unsafe)</strong>. It’s your own app, so that’s fine.</p>
-  <p className="yt-tip">New Google projects can only upload <strong>private</strong> videos until YouTube audits them. OpenClip uploads privately by default; switch a video to public in YouTube Studio when you’re ready.</p></>},
+  <p className="yt-tip">Classic (External) app only: Google first says <em>“Google hasn’t verified this app”</em>. Click <strong>Advanced</strong> → <strong>Go to Reclip (unsafe)</strong>. It’s your own app, so that’s fine.</p>
+  <p className="yt-tip">New Google projects can only upload <strong>private</strong> videos until YouTube audits them. Reclip uploads privately by default; switch a video to public in YouTube Studio when you’re ready.</p></>},
 ];
 
 /** Error messages people hit, with the fix. Same list as docs/YOUTUBE-SETUP.md. */
@@ -69,7 +69,7 @@ const PROBLEMS:[string,React.ReactNode][]=[
  ['“Error 400: redirect_uri_mismatch” or “That JSON is for a Web application client”',<>The client is the wrong type. Make a new client with Application type <strong>Desktop app</strong>, download its JSON and save it again.</>],
  ['“YouTube Data API v3 is turned off” / “has not been used in project”',<>Do step 3 in the <strong>same project</strong> as your client, wait two minutes, then connect again.</>],
  ['“The JSON has no client secret” or “invalid_client”',<>The secret is only shown when the client is made. Open <A href="https://console.cloud.google.com/auth/clients">Clients</A>, open your client, click <strong>Add secret</strong>, download the JSON again and save it.</>],
- ['“OpenClip wasn’t given permission to upload”',<>A permission box was left unticked. Click <strong>Disconnect</strong>, <strong>Connect YouTube</strong>, and tick every box.</>],
+ ['“Reclip wasn’t given permission to upload”',<>A permission box was left unticked. Click <strong>Disconnect</strong>, <strong>Connect YouTube</strong>, and tick every box.</>],
  ['“This Google account has no YouTube channel yet”',<>Create the channel on youtube.com (profile picture → <strong>Create a channel</strong>), or connect with the account that owns it.</>],
  ['It worked, but a week later uploads fail (“invalid_grant”)',<>Classic External apps in testing expire after 7 days. Click <strong>Disconnect</strong> and <strong>Connect YouTube</strong> again, or remake the app with the Personal page to stop this.</>],
  ['Uploads stay private',<>Normal for new Google projects until YouTube audits them. Make the video public in YouTube Studio, or apply through Google’s YouTube API audit form.</>],

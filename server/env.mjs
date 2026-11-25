@@ -1,4 +1,4 @@
-// Settings from .env, read from the OpenClip folder (not wherever the app was started), forgiving the usual Windows
+// Settings from .env, read from the Reclip folder (not wherever the app was started), forgiving the usual Windows
 // mistakes: a file saved as UTF-16 (PowerShell's `echo ... > .env`), or saved as ".env.txt" by Notepad with file
 // extensions hidden. It is read again when it changes, so a new API key works without restarting. Real environment
 // variables win over the file. `envStatus()` says what was found (never the values) for the app and the start log.
@@ -23,7 +23,7 @@ export function decodeEnv(bytes){
 export function envProblems(text,{file,encoding}){
  const out=[];if(!file)return out;
  if(path.basename(file)!=='.env')out.push(`The settings file is named "${path.basename(file)}". It works, but rename it to ".env".`);
- if(encoding==='utf-16')out.push('The .env file was saved as UTF-16 (PowerShell does this). OpenClip reads it anyway; saving it as UTF-8 avoids trouble with other tools.');
+ if(encoding==='utf-16')out.push('The .env file was saved as UTF-16 (PowerShell does this). Reclip reads it anyway; saving it as UTF-8 avoids trouble with other tools.');
  for(const [key] of AI_KEYS.filter(([k])=>k!=='OLLAMA').concat([['OLLAMA_API_KEY'],['OLLAMA_MODEL']])){const m=text.match(new RegExp(`^\\s*#\\s*${key}\\s*=\\s*\\S`,'m'));if(m&&!new RegExp(`^\\s*${key}\\s*=\\s*\\S`,'m').test(text))out.push(`${key} is commented out: remove the # at the start of its line.`);}
  if(/^\s*export\s+\w+=/m.test(text))out.push('Remove "export " from the start of lines in .env.');
  return out;

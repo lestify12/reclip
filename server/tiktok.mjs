@@ -275,7 +275,7 @@ export function registerTikTokRoutes(app,{client,drafts,posting,tiktokExports}){
  app.post('/api/tiktok/connect',(req,res)=>res.json({url:client.authorizeUrl(redirect(req))}));
  app.get('/api/tiktok/callback',async(req,res)=>{
   await client.callback(req.query);
-  res.set('Cache-Control','no-store').type('html').send('<!doctype html><title>TikTok connected</title><h1>TikTok connected</h1><p>Close this window or <a href="/">return to OpenClip</a>.</p>');
+  res.set('Cache-Control','no-store').type('html').send('<!doctype html><title>TikTok connected</title><h1>TikTok connected</h1><p>Close this window or <a href="/">return to Reclip</a>.</p>');
  });
  app.post('/api/tiktok/disconnect',async(req,res)=>res.json(await client.disconnect()));
  app.get('/api/posting/:id/tiktok',(req,res)=>{

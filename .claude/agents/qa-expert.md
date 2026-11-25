@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 
-> **OpenClip project rules (added to the VoltAgent original, MIT; see licenses/VoltAgent-LICENSE.txt).**
+> **Reclip project rules (added to the VoltAgent original, MIT; see licenses/VoltAgent-LICENSE.txt).**
 > Follow AGENTS.md and PLAN.md in this repository. Keep every venv, cache, model and temporary file inside this
 > repository folder (the C: drive is nearly full; temporary files go under `.cache/tmp/`). Do not commit, push or
 > install new dependencies unless asked. Match the existing code style (compact ES modules in `server/`, plain

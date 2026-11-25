@@ -12,7 +12,7 @@ const clock=(t:number)=>{const s=Math.max(0,Math.round(t)),h=Math.floor(s/3600),
 const KIND={funny:'Funny',highlight:'Hype',clippable:'Clip that'} as const;
 
 /** Whole-stream heat strip: see where the reactions are, open existing clips, add any 20–90 s range (up to a minute once pauses are trimmed) as a new clip. */
-export default function StreamTimeline({job,onAdded,onOpenClip}:{job:Job;onAdded:(job:Job,clip:Clip)=>void;onOpenClip:(clipId:string)=>void}){
+export default function StreamTimeline({job,onAdded,onReclip}:{job:Job;onAdded:(job:Job,clip:Clip)=>void;onReclip:(clipId:string)=>void}){
  const [data,setData]=useState<Timeline|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(''),[view,setView]=useState<[number,number]|null>(null),[pick,setPick]=useState<[number,number]|null>(null),[showUsed,setShowUsed]=useState(false);
  const strip=useRef<HTMLDivElement>(null),drag=useRef<number|null>(null);
  const clipKey=job.clips.map(c=>`${c.id}:${c.start}:${c.end}`).join('|');
@@ -37,7 +37,7 @@ export default function StreamTimeline({job,onAdded,onOpenClip}:{job:Job;onAdded
   {data&&<><div ref={strip} className="timeline-strip" onPointerDown={down} onPointerMove={move} onPointerUp={up} role="presentation">
    {visible.map(b=><span key={b.t} className={`timeline-bar ${b.laugh?'laugh':b.hype||b.cue?'hype':''}`} style={{left:pct(b.t),width:width(b.t,b.t+data.bucket),height:`${Math.max(6,Math.min(100,b.loud/maxLoud*100)).toFixed(1)}%`}}/>)}
    {visible.filter(b=>b.laugh||b.hype||b.cue).map(b=><span key={'m'+b.t} className={`timeline-mark ${b.laugh?'laugh':'hype'}`} style={{left:pct(b.t+data.bucket/2)}} title={`${clock(b.t)} · ${[b.laugh&&`${b.laugh} laugh`,b.hype&&`${b.hype} hype`,b.cue&&'“clip that”'].filter(Boolean).join(' · ')}`}/>)}
-   {data.clips.filter(c=>c.end>v0&&c.start<v1).map(c=><button type="button" key={c.id} className={`timeline-clip ${c.kept?'':'discarded'}`} style={{left:pct(Math.max(v0,c.start)),width:width(c.start,c.end)}} title={`${clock(c.start)} · ${c.title}`} aria-label={`Edit clip: ${c.title}`} onClick={()=>onOpenClip(c.id)}/>)}
+   {data.clips.filter(c=>c.end>v0&&c.start<v1).map(c=><button type="button" key={c.id} className={`timeline-clip ${c.kept?'':'discarded'}`} style={{left:pct(Math.max(v0,c.start)),width:width(c.start,c.end)}} title={`${clock(c.start)} · ${c.title}`} aria-label={`Edit clip: ${c.title}`} onClick={()=>onReclip(c.id)}/>)}
    {pick&&<span className={`timeline-pick ${valid?'':'invalid'}`} style={{left:pct(Math.max(v0,pick[0])),width:width(pick[0],pick[1])}}/>}
   </div>
   <div className="timeline-ticks" aria-hidden="true">{[0,.25,.5,.75,1].map(f=><span key={f} style={{left:`${f*100}%`}}>{clock(v0+f*span)}</span>)}</div>

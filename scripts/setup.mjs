@@ -1,4 +1,4 @@
-// `npm run setup`: the Python workers in .venv, then a check of everything OpenClip needs, explained in plain words
+// `npm run setup`: the Python workers in .venv, then a check of everything Reclip needs, explained in plain words
 // with the exact install command for this computer when something is missing. Ends with a checklist.
 import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';import {ROOT,PYTHON,localEnv,CACHE} from '../server/config.mjs';import {VC_RUNTIME_URL} from '../server/process.mjs';
 const env=localEnv();for(const d of ['tmp','npm','pip','uv','huggingface','models','pycache','python'])fs.mkdirSync(path.join(CACHE,d),{recursive:true});
@@ -26,7 +26,7 @@ function findPython(){
  if(process.platform==='win32')for(const v of ['3.12','3.13','3.11'])candidates.push({cmd:'py',args:[`-${v}`]});
  const tried=[];
  for(const c of candidates){const v=versionOf(c.cmd,c.args);tried.push(`${[c.cmd,...c.args].join(' ')}: ${show(v)}`);if(ok(v))return c;}
- throw new SetupError(`OpenClip needs Python 3.11, 3.12 or 3.13 and found none (${tried.join(', ')}).\n  ${how('python')}`);
+ throw new SetupError(`Reclip needs Python 3.11, 3.12 or 3.13 and found none (${tried.join(', ')}).\n  ${how('python')}`);
 }
 
 /**
@@ -42,26 +42,26 @@ function vcRuntimeWarning(){
  if(major<14||(major===14&&minor<40))return `The Microsoft Visual C++ Runtime is too old (${version}), so transcription may crash (Windows error 0xC0000005). Update it from ${VC_RUNTIME_URL}, then restart the computer.`;
  return null;
 }
-/** Free space on the drive OpenClip lives on, in GB (null when unknown). */
+/** Free space on the drive Reclip lives on, in GB (null when unknown). */
 function freeGb(){try{const s=fs.statfsSync(ROOT);return s.bavail*s.bsize/1e9;}catch{return null;}}
 
 const done=[],warnings=[];
 try{
  const [major,minor]=process.versions.node.split('.').map(Number);
- if(major<20||(major===20&&minor<19))throw new SetupError(`OpenClip needs Node.js 20.19 or newer; this is ${process.versions.node}. Install the current LTS from https://nodejs.org/ (Windows: winget install OpenJS.NodeJS.LTS), then run npm run setup again.`);
+ if(major<20||(major===20&&minor<19))throw new SetupError(`Reclip needs Node.js 20.19 or newer; this is ${process.versions.node}. Install the current LTS from https://nodejs.org/ (Windows: winget install OpenJS.NodeJS.LTS), then run npm run setup again.`);
  done.push(`Node.js ${process.versions.node}`);
 
  step(1,'Python for the speech and video helpers');
  const uv=hasUv();
  if(fs.existsSync(PYTHON)&&!ok(versionOf(PYTHON))){
-  console.log(`  The project's Python environment uses Python ${show(versionOf(PYTHON))}, which OpenClip can't use. Rebuilding it.`);
+  console.log(`  The project's Python environment uses Python ${show(versionOf(PYTHON))}, which Reclip can't use. Rebuilding it.`);
   fs.rmSync(path.join(ROOT,'.venv'),{recursive:true,force:true});
  }
  if(!fs.existsSync(PYTHON)){
   if(uv)exec('uv',['venv','.venv','--python','3.12'],'Creating the Python environment with uv');
   else{const py=findPython();exec(py.cmd,[...py.args,'-m','venv',path.join(ROOT,'.venv')],'Creating the Python environment');}
  }
- if(!ok(versionOf(PYTHON)))throw new SetupError(`The project's Python environment uses Python ${show(versionOf(PYTHON))}; OpenClip needs 3.11-3.13. Delete the .venv folder, then:\n  ${how('python')}`);
+ if(!ok(versionOf(PYTHON)))throw new SetupError(`The project's Python environment uses Python ${show(versionOf(PYTHON))}; Reclip needs 3.11-3.13. Delete the .venv folder, then:\n  ${how('python')}`);
  done.push(`Python ${show(versionOf(PYTHON))} in .venv${uv?' (via uv)':''}`);
 
  step(2,'Installing the speech recognizer and video downloader (first time: a few minutes)');
@@ -78,15 +78,15 @@ try{
 
  step(4,'This computer');
  const vc=vcRuntimeWarning();if(vc)warnings.push(vc);else if(OS==='windows')done.push('Microsoft Visual C++ Runtime');
- const gb=freeGb();if(gb!==null&&gb<10)warnings.push(`Only ${gb.toFixed(1)} GB free on this drive. Speech models, downloads and renders need about 10 GB; free some space or move OpenClip to a bigger drive.`);
+ const gb=freeGb();if(gb!==null&&gb<10)warnings.push(`Only ${gb.toFixed(1)} GB free on this drive. Speech models, downloads and renders need about 10 GB; free some space or move Reclip to a bigger drive.`);
  if(!fs.existsSync(path.join(ROOT,'web','dist','index.html')))warnings.push('The web app is not built yet: run npm run build.');
 
  step(5,'Optional extras');
  if(!fs.existsSync(path.join(CACHE,'models','face','blaze_face_short_range.tflite')))console.log('  Face follow and automatic thumbnails: run npm run setup:faces (optional).');else done.push('Face follow and thumbnail models');
- const envFile=['.env','.env.txt'].find(f=>fs.existsSync(path.join(ROOT,f)));console.log(envFile?`  AI settings file found (${envFile}). The home page shows which keys OpenClip picked up.`:'  AI titles are optional: copy .env.example to .env and add a free Gemini or Groq key (see the README).');
+ const envFile=['.env','.env.txt'].find(f=>fs.existsSync(path.join(ROOT,f)));console.log(envFile?`  AI settings file found (${envFile}). The home page shows which keys Reclip picked up.`:'  AI titles are optional: copy .env.example to .env and add a free Gemini or Groq key (see the README).');
 
  console.log('\n'+'-'.repeat(60));for(const d of done)console.log(`  OK   ${d}`);for(const w of warnings)console.log(`  !!   ${w}`);
- console.log(`\nSetup complete${warnings.length?` with ${warnings.length} thing${warnings.length===1?'':'s'} to check above`:''}. Start OpenClip with:  npm start\nThen open http://localhost:${process.env.PORT||5173} in your browser. Caches and models stay inside ${ROOT}`);
+ console.log(`\nSetup complete${warnings.length?` with ${warnings.length} thing${warnings.length===1?'':'s'} to check above`:''}. Start Reclip with:  npm start\nThen open http://localhost:${process.env.PORT||5173} in your browser. Caches and models stay inside ${ROOT}`);
 }catch(e){
  console.error('\n'+'-'.repeat(60)+'\nSetup stopped: '+(e instanceof SetupError?e.message:`${e.message}\n  This was unexpected. Run npm run setup again; if it keeps happening, copy the messages above into an issue on GitHub.`));
  process.exitCode=1;

@@ -1,7 +1,7 @@
 name = "performance-engineer"
 description = "Use this agent when you need to identify and eliminate performance bottlenecks in applications, databases, or infrastructure systems, and when baseline performance metrics need improvement."
 developer_instructions = """
-> **OpenClip project rules (added to the VoltAgent original, MIT; see licenses/VoltAgent-LICENSE.txt).**
+> **Reclip project rules (added to the VoltAgent original, MIT; see licenses/VoltAgent-LICENSE.txt).**
 > Follow AGENTS.md and PLAN.md in this repository. Keep every venv, cache, model and temporary file inside this
 > repository folder (the C: drive is nearly full; temporary files go under `.cache/tmp/`). Do not commit, push or
 > install new dependencies unless asked. Match the existing code style (compact ES modules in `server/`, plain

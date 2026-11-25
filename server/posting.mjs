@@ -50,7 +50,7 @@ export class PostingQueue{
  postedTwin(p,list=this.list()){const same=o=>o.id!==p.id&&(complete(o)||this.public(o).locked)&&!!(p.source&&o.source)&&o.source.jobId===p.source.jobId&&o.source.clipId===p.source.clipId;return list.find(same)||null;}
  due(now=Date.now()){return this.list().filter(p=>p.autoUpload&&p.state==='draft'&&!this.public(p).locked&&Date.parse(p.autoUpload.at)<=now);}
  async tick(now=Date.now()){if(this.active||!this.youtube.status?.().connected)return [];const lock=path.join(this.root,'.auto-upload.lock');
-  // Another OpenClip server on this folder may be ticking too; only one uploads.
+  // Another Reclip server on this folder may be ticking too; only one uploads.
   try{if(fs.existsSync(lock)&&Date.now()-fs.statSync(lock).mtimeMs>3*3600000)fs.rmSync(lock,{force:true});fs.writeFileSync(lock,String(process.pid),{flag:'wx'});}catch{return [];}
   try{const ready=[];for(const p of this.due(now)){if(Date.parse(p.settings.publishAt)<now+10*60000)this.save({...p,autoUpload:undefined,state:'missed',error:'The app was off when this post was due to upload. Pick a new release time.'});else ready.push(p.id);}
    if(ready.length)await this.run(ready);return ready;}finally{fs.rmSync(lock,{force:true});}}

@@ -1,9 +1,9 @@
 ---
-name: run-openclip-job
-description: Run a real OpenClip project end to end on a test server - paste a YouTube, Twitch or Kick link (including a live stream or a Twitch channel), follow progress, retry or cancel, then verify the clips. Use to test pipeline changes on real streams.
+name: run-reclip-job
+description: Run a real Reclip project end to end on a test server - paste a YouTube, Twitch or Kick link (including a live stream or a Twitch channel), follow progress, retry or cancel, then verify the clips. Use to test pipeline changes on real streams.
 ---
 
-# Run an OpenClip project
+# Run an Reclip project
 
 ## 1. Start a test server (do not use the owner's)
 

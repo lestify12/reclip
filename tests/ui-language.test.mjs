@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {getLanguage,setLanguage,readStrings,saveStrings,validLanguage,aiTranslate} from '../server/ui-language.mjs';
 
-const tmp=()=>fs.mkdtempSync(path.join(os.tmpdir(),'openclip-lang-'));
+const tmp=()=>fs.mkdtempSync(path.join(os.tmpdir(),'reclip-lang-'));
 
 test('display language: English until chosen, then saved on disk and read back after a restart',()=>{
  const root=tmp();

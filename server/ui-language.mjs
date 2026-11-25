@@ -48,7 +48,7 @@ export async function aiTranslate(language,texts,{ask=askAI,chunk=60}={}){
  for(let i=0;i<list.length;i+=chunk){
   const part=list.slice(i,i+chunk);
   const {data}=await ask({schema:Reply,maxTokens:8000,timeout:60000,
-   system:`You translate the interface of OpenClip, a desktop app that cuts livestreams into short clips, from English into the language with the code "${language}". Return exactly one translation per input line, in the same order. Keep them short like button and menu labels. Keep {0}, {1} and similar placeholders, numbers, emoji, file names, commands (npm, git), and the names OpenClip, YouTube, TikTok, Twitch, Kick, Whop, Gemini, Groq, Ollama, Claude, FFmpeg unchanged.`,
+   system:`You translate the interface of Reclip, a desktop app that cuts livestreams into short clips, from English into the language with the code "${language}". Return exactly one translation per input line, in the same order. Keep them short like button and menu labels. Keep {0}, {1} and similar placeholders, numbers, emoji, file names, commands (npm, git), and the names Reclip, YouTube, TikTok, Twitch, Kick, Whop, Gemini, Groq, Ollama, Claude, FFmpeg unchanged.`,
    user:JSON.stringify({language,lines:part})});
   if(data.translations.length!==part.length)throw new Error('The AI returned the wrong number of lines. Try again.');
   part.forEach((en,k)=>{const tr=String(data.translations[k]||'').trim();if(tr)out[en]=tr;});

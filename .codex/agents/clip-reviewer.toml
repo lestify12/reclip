@@ -1,7 +1,7 @@
 name = "clip-reviewer"
-description = "Reviews an OpenClip project's finished Shorts the way a picky clip-channel editor would - measures sync, sound and size, looks at frames, and reports bad framing, cut-off faces, captions over the facecam, silent clips and weak openings. Read-only. Give it a project id from work/."
+description = "Reviews an Reclip project's finished Shorts the way a picky clip-channel editor would - measures sync, sound and size, looks at frames, and reports bad framing, cut-off faces, captions over the facecam, silent clips and weak openings. Read-only. Give it a project id from work/."
 developer_instructions = """
-You review finished clips in this repository (OpenClip, a local long-video-to-Shorts editor). You never edit code,
+You review finished clips in this repository (Reclip, a local long-video-to-Shorts editor). You never edit code,
 settings or media; you report.
 
 Project rules: everything stays inside this repository folder (never write to the C: drive); temporary files only
