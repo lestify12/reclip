@@ -30,10 +30,11 @@ export function envProblems(text,{file,encoding}){
 }
 
 /** Read .env (again, if it changed since last time) into process.env. Cheap: one stat per call. */
-export function loadEnv({root=ROOT,env=process.env}={}){
+export function loadEnv({root=ROOT,env=process.env,force=false}={}){
  const candidates=['.env','.env.txt','env','.env.env'].map(n=>path.join(root,n)),file=candidates.find(f=>{try{return fs.statSync(f).isFile();}catch{return false;}})||null;
  let stamp='';try{if(file){const s=fs.statSync(file);stamp=`${file}:${s.mtimeMs}:${s.size}`;}}catch{}
- if(stamp===seen&&env===process.env)return status;seen=stamp;
+ // `force`: the Settings screen just wrote the file; a same-size rewrite within the same millisecond must still apply.
+ if(stamp===seen&&env===process.env&&!force)return status;seen=stamp;
  if(!file){status={file:null,encoding:null,problems:fs.existsSync(path.join(root,'.env.example'))?['No .env file yet: copy .env.example to .env and add a key (see the README).']:[],keys:keyStatus(env)};return status;}
  const {text,encoding}=decodeEnv(fs.readFileSync(file)),values=dotenv.parse(text);
  // Values that came from the file follow the file (a key removed from it is removed here); real environment variables stay.
