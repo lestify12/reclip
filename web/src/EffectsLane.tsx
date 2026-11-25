@@ -1,3 +1,4 @@
+import Select from './Select';
 import {useCallback,useEffect,useRef,useState,type RefObject} from 'react';
 import {ZoomIn,Vibrate,Zap,Snowflake,Rewind,Type,Volume2,Trash2,Play,Undo2,Redo2,Keyboard,Plus,X,Scissors,Asterisk} from 'lucide-react';
 import type {Effect,EffectType,Range,Sound,Settings,EngagementSettings} from './types';
@@ -73,7 +74,7 @@ export function EffectsLane({video,segments,effects,beats,autoOn,selected,sounds
 function playSound(id:string){if(!id)return;const a=new Audio(`/api/sounds/${id}`);a.volume=.8;a.play().catch(()=>{});}
 export function SoundSelect({value,sounds,onChange,label='Sound'}:{value:string;sounds:Sound[];onChange:(v:string)=>void;label?:string}){
  const groups=[...new Set(sounds.map(s=>s.group))];
- return <div className="sound-select"><label><span className="field-label">{label}</span><select aria-label={label} value={value} onChange={e=>{onChange(e.target.value);playSound(e.target.value);}}><option value="">None</option>{groups.map(g=><optgroup key={g} label={g}>{sounds.filter(s=>s.group===g).map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</optgroup>)}</select></label><button type="button" className="icon-button small" disabled={!value} aria-label="Play sound" title="Play sound" onClick={()=>playSound(value)}><Play size={14}/></button>{!sounds.length&&<small>Sounds load when the server is updated.</small>}</div>;
+ return <div className="sound-select"><label><span className="field-label">{label}</span><Select aria-label={label} value={value} onChange={e=>{onChange(e.target.value);playSound(e.target.value);}}><option value="">None</option>{groups.map(g=><optgroup key={g} label={g}>{sounds.filter(s=>s.group===g).map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</optgroup>)}</Select></label><button type="button" className="icon-button small" disabled={!value} aria-label="Play sound" title="Play sound" onClick={()=>playSound(value)}><Play size={14}/></button>{!sounds.length&&<small>Sounds load when the server is updated.</small>}</div>;
 }
 
 function EffectInspector({effect,sounds,segments,onChange,onDelete,onClose}:{effect:Effect;sounds:Sound[];segments:Segment[];onChange:(e:Effect)=>void;onDelete:()=>void;onClose:()=>void}){
@@ -120,11 +121,11 @@ export function MusicLibrary({value,onChange,musicName,uploading,onUpload}:{valu
  useEffect(()=>{fetch('/api/music').then(r=>r.ok?r.json():[]).then(d=>{const list=Array.isArray(d)?d:d?.tracks||[];setTracks(list.map((t:string|{name?:string;file?:string;label?:string;title?:string})=>typeof t==='string'?{name:t,label:t}:{name:String(t.name||t.file||''),label:String(t.label||t.title||t.name||t.file||'')}).filter((t:Music)=>t.name));}).catch(()=>setTracks([]));},[]);
  const track=String(value.musicTrack||'');
  return <div className="music-controls"><span className="field-label">Background music · optional</span>
-  {!!tracks?.length&&<label><span className="field-label">From your music library</span><select aria-label="Music track" value={track} onChange={e=>onChange({...value,musicTrack:e.target.value,musicEnabled:!!e.target.value||(!!musicName&&!!value.musicEnabled)})}><option value="">{musicName?`This project’s track · ${musicName}`:'None'}</option>{tracks.map(t=><option key={t.name} value={t.name}>{t.label}</option>)}</select></label>}
+  {!!tracks?.length&&<label><span className="field-label">From your music library</span><Select aria-label="Music track" value={track} onChange={e=>onChange({...value,musicTrack:e.target.value,musicEnabled:!!e.target.value||(!!musicName&&!!value.musicEnabled)})}><option value="">{musicName?`This project’s track · ${musicName}`:'None'}</option>{tracks.map(t=><option key={t.name} value={t.name}>{t.label}</option>)}</Select></label>}
   <input aria-label="Upload background music" type="file" accept=".mp3,.wav,.m4a,.ogg,.flac" disabled={uploading} onChange={e=>onUpload(e.target.files?.[0])}/>
   <small>{uploading?'Uploading…':musicName?`Project track: ${musicName}`:'Choose a local track. Speech ducks the music automatically.'}</small>
   <label className="check-option"><input type="checkbox" checked={!!value.musicEnabled} disabled={(!musicName&&!track)||uploading} onChange={e=>onChange({...value,musicEnabled:e.target.checked})}/>Use background music</label>
-  <label><span className="field-label">Music level</span><select aria-label="Music level" value={Number(value.musicVolume??-29)} onChange={e=>onChange({...value,musicVolume:Number(e.target.value)})}><option value={-32}>Subtle</option><option value={-29}>Balanced</option><option value={-26}>Present</option></select></label></div>;
+  <label><span className="field-label">Music level</span><Select aria-label="Music level" value={Number(value.musicVolume??-29)} onChange={e=>onChange({...value,musicVolume:Number(e.target.value)})}><option value={-32}>Subtle</option><option value={-29}>Balanced</option><option value={-26}>Present</option></Select></label></div>;
 }
 
 export function TitleChips({options,current,onPick}:{options:string[];current:string;onPick:(t:string)=>void}){

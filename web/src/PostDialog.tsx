@@ -1,3 +1,4 @@
+import Select from './Select';
 import {useEffect,useRef,useState} from 'react';
 import {Upload,X,Loader2,ExternalLink,CalendarClock,MonitorPlay,Smartphone,RefreshCw,Sparkles} from 'lucide-react';
 import type {Job,Clip,UploadMetadata} from './types';import {TitleOptions} from './ThumbnailPicker';
@@ -65,9 +66,9 @@ export default function PostDialog({job,clip,onClose,onReexport,onConnect}:{job:
     <label><span className="field-label">Description</span><textarea rows={6} value={description} onChange={e=>setDescription(e.target.value)}/></label>
     <label><span className="field-label">Tags · comma separated <small>{tagChars}/440</small></span><input value={tags} onChange={e=>setTags(e.target.value)} placeholder="ishowspeed, spider-man, irl"/></label>
     <div className="post-grid">
-     <label><span className="field-label">Category</span><select value={categoryId} onChange={e=>setCategoryId(e.target.value)}>{CATEGORIES.map(([id,name])=><option key={id} value={id}>{name}</option>)}</select></label>
+     <label><span className="field-label">Category</span><Select value={categoryId} onChange={e=>setCategoryId(e.target.value)}>{CATEGORIES.map(([id,name])=><option key={id} value={id}>{name}</option>)}</Select></label>
      
-     <label><span className="field-label">Visibility</span><select value={privacy} onChange={e=>setPrivacy(e.target.value)}><option value="private">Private · only you</option><option value="unlisted">Unlisted · anyone with the link</option><option value="public">Public · post now</option><option value="schedule">Schedule a public release</option></select></label>
+     <label><span className="field-label">Visibility</span><Select value={privacy} onChange={e=>setPrivacy(e.target.value)}><option value="private">Private · only you</option><option value="unlisted">Unlisted · anyone with the link</option><option value="public">Public · post now</option><option value="schedule">Schedule a public release</option></Select></label>
      {privacy==='schedule'&&<label><span className="field-label"><CalendarClock size={13}/> Release time</span><input type="datetime-local" value={publishAt} onChange={e=>setPublishAt(e.target.value)}/></label>}
     </div>
     <fieldset className="kids-choice"><legend className="field-label">Audience · required by YouTube</legend><label className="check-option"><input type="radio" name="kids" checked={kids==='no'} onChange={()=>setKids('no')}/>No, it's not made for kids</label><label className="check-option"><input type="radio" name="kids" checked={kids==='yes'} onChange={()=>setKids('yes')}/>Yes, it's made for kids</label></fieldset>

@@ -1,3 +1,4 @@
+import Select from './Select';
 import {useEffect,useState,type FormEvent,type ReactNode} from 'react';
 import {KeyRound,Check,Trash2,ExternalLink,Loader2,CircleAlert} from 'lucide-react';
 
@@ -78,7 +79,7 @@ export default function Settings(){
   </section>}
   {data&&<section className="settings-section"><h2>Preferences</h2><p className="section-note">Which AI writes your YouTube text, and the region for trending titles.</p>
    <ValuesForm keys={PREF_KEYS} values={data.values} onSave={save}>{field=><>
-    <div className="field"><label htmlFor="setting-METADATA_AI">Write with</label><select {...field('METADATA_AI')}>{METADATA_CHOICES.map(([v,label])=><option key={v} value={v}>{label}</option>)}</select></div>
+    <div className="field"><label htmlFor="setting-METADATA_AI">Write with</label><Select {...field('METADATA_AI')}>{METADATA_CHOICES.map(([v,label])=><option key={v} value={v}>{label}</option>)}</Select></div>
     <div className="field"><label htmlFor="setting-YOUTUBE_REGION">YouTube region</label><input type="text" {...field('YOUTUBE_REGION')} placeholder="US" maxLength={2} autoComplete="off" spellCheck={false}/><small>Two-letter country code for YouTube’s trending chart, used as title-style context.</small></div>
     <details className="advanced"><summary>Model names</summary>
      <div className="field"><label htmlFor="setting-GEMINI_MODEL">Gemini model</label><input type="text" {...field('GEMINI_MODEL')} placeholder="gemini-3.8-flash" autoComplete="off" spellCheck={false}/></div>

@@ -1,10 +1,12 @@
 # Reclip
 
+<img src="docs/media/logo-dark.png" alt="Reclip" width="420">
+
 Turn a long stream, a podcast or any recording into captioned, edited Shorts (9:16) or regular videos (16:9), on your own computer.
 
 Paste a public YouTube, Twitch or Kick link (a past broadcast, a clip, or a YouTube or Twitch stream that is still live) or drop in a video file. Reclip transcribes it locally, finds the best moments, edits each one with the template you choose, and exports ready-to-post MP4s. If you want, it also writes titles with AI and schedules the uploads to your YouTube channel.
 
-Reclip is based on [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos, used under the MIT license.
+Reclip is redesigned from [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos, used under the MIT license.
 
 ## See it in action
 
@@ -379,7 +381,7 @@ Contributions are welcome. Good starting points: moment selection quality, more 
 
 ## License
 
-Reclip is a fork of [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos (MIT). The original copyright notice is kept in [LICENSE](LICENSE).
+Reclip is a redesign of [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos (MIT). The original copyright notice is kept in [LICENSE](LICENSE).
 
 MIT for the original project code; see [LICENSE](LICENSE). Fonts, sounds, dependencies and external programs keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The meme sounds and the skull artwork are original and generated in code.
 

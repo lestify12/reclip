@@ -1,3 +1,4 @@
+import Select from './Select';
 import {useState} from 'react';
 import {Sparkles,Download,Upload,MonitorPlay,Smartphone} from 'lucide-react';
 import type {Job} from './types';
@@ -18,7 +19,7 @@ export default function StreamSummary({job,busy,onBuild,onPost}:{job:Job;busy:bo
     <button type="button" role="radio" aria-checked={format==='video'} className={format==='video'?'chosen':''} onClick={()=>pick('video')}><MonitorPlay size={20}/><strong>Main video</strong><small>16:9 · chapters in the description</small></button>
     <button type="button" role="radio" aria-checked={format==='shorts'} className={format==='shorts'?'chosen':''} onClick={()=>pick('shorts')}><Smartphone size={20}/><strong>Shorts</strong><small>9:16 vertical · quick recap</small></button>
    </div>
-   <label><span className="field-label">Length</span><select aria-label="Summary length" value={length} onChange={e=>setLength(Number(e.target.value))}>{LENGTHS[format].map(([s,l])=><option key={s} value={s}>{l}</option>)}</select></label>
+   <label><span className="field-label">Length</span><Select aria-label="Summary length" value={length} onChange={e=>setLength(Number(e.target.value))}>{LENGTHS[format].map(([s,l])=><option key={s} value={s}>{l}</option>)}</Select></label>
    <button className="primary" disabled={busy} onClick={()=>onBuild(format,length)}><Sparkles size={16}/>{summary?'Rebuild summary':'Build summary'}</button>
   </div>
   {summary&&<div className={`summary-result ${summary.format}`}>

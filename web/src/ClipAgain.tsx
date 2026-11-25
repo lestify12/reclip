@@ -1,3 +1,4 @@
+import Select from './Select';
 import {useState} from 'react';import {Loader2,Plus,X,Check,CircleAlert} from 'lucide-react';
 import type {Job} from './types';
 
@@ -8,7 +9,7 @@ const COUNTS=[3,5,10];
 export function ClipAgain({job,disabled,onStart,onStop}:{job:Job;disabled:boolean;onStart:(count:number)=>void;onStop:()=>void}){
  const [count,setCount]=useState(5),room=30-job.clips.length,running=job.more?.status==='running';
  if(running)return <button type="button" className="secondary" onClick={onStop}><X size={16}/>Stop adding clips</button>;
- return <div className="clip-again"><select aria-label="How many more clips" value={Math.min(count,Math.max(1,room))} disabled={disabled||room<=0} onChange={e=>setCount(Number(e.target.value))}>{COUNTS.filter(n=>n<=Math.max(room,COUNTS[0])).map(n=><option key={n} value={n}>{Math.min(n,room)} more</option>)}</select>
+ return <div className="clip-again"><Select aria-label="How many more clips" value={Math.min(count,Math.max(1,room))} disabled={disabled||room<=0} onChange={e=>setCount(Number(e.target.value))}>{COUNTS.filter(n=>n<=Math.max(room,COUNTS[0])).map(n=><option key={n} value={n}>{Math.min(n,room)} more</option>)}</Select>
   <button type="button" className="secondary" disabled={disabled||room<=0} title={room<=0?'A project holds up to 30 clips':'Finds new moments that don’t repeat your clips. Keep watching and editing meanwhile.'} onClick={()=>onStart(Math.min(count,room))}><Plus size={16}/>Clip again</button></div>;
 }
 

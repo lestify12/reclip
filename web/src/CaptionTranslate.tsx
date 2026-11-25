@@ -1,3 +1,4 @@
+import Select from './Select';
 import {useState} from 'react';import {Languages,Loader2,RotateCcw} from 'lucide-react';
 import type {Word,Range} from './types';import {captionPhrases,spreadTranslation} from './logic.mjs';import {LANGUAGES,languageName,savedLanguage} from './translate';
 
@@ -54,7 +55,7 @@ export default function CaptionTranslate({jobId,words,edits,setEdits,ranges,spok
  function back(){if(!current)return;setEdits(current.before);setDone(null);}
  return <div className="caption-translate">
   <div className="caption-translate-row"><Languages size={16} aria-hidden="true"/><label htmlFor="caption-language">Translate captions to</label>
-   <select id="caption-language" translate="no" value={to} disabled={busy} onChange={e=>{setTo(e.target.value);setError('');}}>{CHOICES.filter(c=>base(c)!==from).map(c=><option key={c} value={c}>{languageName(c)} · {languageName(c,'en')}</option>)}</select>
+   <Select id="caption-language" translate="no" value={to} disabled={busy} onChange={e=>{setTo(e.target.value);setError('');}}>{CHOICES.filter(c=>base(c)!==from).map(c=><option key={c} value={c}>{languageName(c)} · {languageName(c,'en')}</option>)}</Select>
    <button type="button" className="secondary small" disabled={busy} onClick={run}>{busy?<Loader2 className="spin" size={14}/>:<Languages size={14}/>}{busy?'Translating…':current?'Translate again':'Translate'}</button>
    {current&&!busy&&<button type="button" className="text-button" onClick={back}><RotateCcw size={14}/>Back to original words</button>}</div>
   {status&&<small role="status">{status}</small>}
