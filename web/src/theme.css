@@ -933,3 +933,13 @@ main{padding:0 32px}
 .projects-panel .empty-history{padding:8px 10px 10px}
 .projects-panel .library-title{margin:0;padding:6px 10px 8px}
 .projects-panel nav{margin:0;padding:0}
+
+/* ---------- Settings: side tabs, no long scroll ---------- */
+.settings-screen{padding-top:28px;max-width:1100px}
+.settings-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;align-items:start}
+.settings-tabs{display:grid;gap:4px;padding:8px;background:var(--paper);border:1px solid var(--line);border-radius:12px;position:sticky;top:84px}
+.settings-tabs button{display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border:0;border-radius:10px;background:transparent;color:var(--ink-soft);font:500 14px/1 Work,sans-serif;text-align:left;cursor:pointer}
+.settings-tabs button:hover{background:var(--paper-2);color:var(--ink)}.settings-tabs button.active{background:#6046f026;color:var(--ink)}.settings-tabs button.active svg{color:var(--blue)}
+.settings-content{min-width:0;display:grid;gap:18px}
+.settings-section .key-row{padding:14px 0}
+@media(max-width:800px){.settings-layout{grid-template-columns:1fr}.settings-tabs{position:static;display:flex;flex-wrap:wrap}}

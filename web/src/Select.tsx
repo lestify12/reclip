@@ -5,13 +5,13 @@ import {ChevronDown,Check} from 'lucide-react';
  * A styled drop-in for <select>: same children (<option>, <optgroup>), same `value` / `onChange(e.target.value)` shape,
  * so existing handlers keep working. The menu is drawn by the app (dark, keyboard-friendly) instead of the OS.
  */
-type Opt={value:string;label:string;disabled?:boolean;group?:string};
+type Opt={value:string;label:string;disabled?:boolean;group?:string;style?:CSSProperties};
 type Props={value?:string|number;defaultValue?:string|number;onChange?:(e:{target:{value:string}})=>void;children?:ReactNode;id?:string;'aria-label'?:string;'aria-labelledby'?:string;translate?:'yes'|'no';disabled?:boolean;className?:string;title?:string;name?:string;style?:CSSProperties};
 
 const textOf=(n:ReactNode):string=>Array.isArray(n)?n.map(textOf).join(''):n==null||typeof n==='boolean'?'':typeof n==='object'?textOf((n as {props?:{children?:ReactNode}}).props?.children):String(n);
 function collect(children:ReactNode,group?:string,out:Opt[]=[]):Opt[]{
- Children.forEach(children,c=>{if(!isValidElement(c))return;const p=c.props as {value?:unknown;label?:unknown;disabled?:boolean;children?:ReactNode};
-  if(c.type==='option')out.push({value:String(p.value??textOf(p.children)),label:textOf(p.children),disabled:!!p.disabled,group});
+ Children.forEach(children,c=>{if(!isValidElement(c))return;const p=c.props as {value?:unknown;label?:unknown;disabled?:boolean;children?:ReactNode;style?:CSSProperties};
+  if(c.type==='option')out.push({value:String(p.value??textOf(p.children)),label:textOf(p.children),disabled:!!p.disabled,group,style:p.style});
   else if(c.type==='optgroup')collect(p.children,String(p.label||''),out);
   else if(p.children)collect(p.children,group,out);});
  return out;
@@ -43,9 +43,9 @@ export default function Select({value,defaultValue,onChange,children,id,disabled
   else if(e.key==='Tab')setOpen(false);
  };
  return <div className={`ui-select ${open?'open':''} ${className}`} ref={box} style={style}>
-  <button type="button" id={id} name={name} className="ui-select-button" title={title} disabled={disabled} aria-haspopup="listbox" aria-expanded={open} aria-controls={open?listId:undefined} {...aria} onClick={()=>setOpen(!open)} onKeyDown={key}><span className="ui-select-value">{sel?.label||''}</span><ChevronDown size={15}/></button>
+  <button type="button" id={id} name={name} className="ui-select-button" title={title} disabled={disabled} aria-haspopup="listbox" aria-expanded={open} aria-controls={open?listId:undefined} {...aria} onClick={()=>setOpen(!open)} onKeyDown={key}><span className="ui-select-value" style={sel?.style}>{sel?.label||''}</span><ChevronDown size={15}/></button>
   {open&&<div className="ui-select-menu" role="listbox" id={listId} ref={list} style={pos} aria-activedescendant={`${listId}-${hi}`}>
-   {opts.map((o,i)=>{const grp=o.group&&(i===0||opts[i-1].group!==o.group);return <div key={o.value+i}>{grp&&<div className="ui-select-group">{o.group}</div>}<div id={`${listId}-${i}`} role="option" aria-selected={o.value===sel?.value} aria-disabled={o.disabled||undefined} data-hi={i===hi?'true':undefined} className={`ui-select-option ${o.value===sel?.value?'on':''} ${i===hi?'hi':''} ${o.disabled?'off':''}`} onMouseEnter={()=>setHi(i)} onClick={()=>pick(o)}>{o.label}{o.value===sel?.value&&<Check size={14}/>}</div></div>;})}
+   {opts.map((o,i)=>{const grp=o.group&&(i===0||opts[i-1].group!==o.group);return <div key={o.value+i}>{grp&&<div className="ui-select-group">{o.group}</div>}<div id={`${listId}-${i}`} role="option" aria-selected={o.value===sel?.value} aria-disabled={o.disabled||undefined} data-hi={i===hi?'true':undefined} className={`ui-select-option ${o.value===sel?.value?'on':''} ${i===hi?'hi':''} ${o.disabled?'off':''}`} onMouseEnter={()=>setHi(i)} onClick={()=>pick(o)}><span style={o.style}>{o.label}</span>{o.value===sel?.value&&<Check size={14}/>}</div></div>;})}
   </div>}
  </div>;
 }

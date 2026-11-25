@@ -1,6 +1,6 @@
 import Select from './Select';
 import {useEffect,useState,type FormEvent,type ReactNode} from 'react';
-import {KeyRound,Check,Trash2,ExternalLink,Loader2,CircleAlert} from 'lucide-react';
+import {KeyRound,Check,Trash2,ExternalLink,Loader2,CircleAlert,Cpu,SlidersHorizontal} from 'lucide-react';
 
 export type SettingsData={file:string|null;problems:string[];secrets:Record<string,{set:boolean;hint:string}>;values:Record<string,string>};
 type Provider={key:string;name:string;cost:string;does:string;link:string};
@@ -60,24 +60,25 @@ const OLLAMA_KEYS=['OLLAMA_MODEL','OLLAMA_HOST'],PREF_KEYS=['METADATA_AI','YOUTU
 
 /** Settings screen: AI keys and preferences, saved straight into .env. */
 export default function Settings(){
- const [data,setData]=useState<SettingsData|null>(null),[loadError,setLoadError]=useState('');
+ const [data,setData]=useState<SettingsData|null>(null),[loadError,setLoadError]=useState(''),[tab,setTab]=useState<'ai'|'ollama'|'prefs'>('ai');
  useEffect(()=>{getSettings().then(setData).catch(e=>setLoadError((e as Error).message));},[]);
  const save=async(patch:Record<string,string>)=>{setData(await postSettings(patch));};
  return <section className="settings-screen">
   <header className="screen-heading"><h1>Settings</h1><p>AI keys and preferences. Everything is saved to the .env file in the Reclip folder and applies right away, no restart needed.</p></header>
   {loadError&&<div className="notice warn" role="alert"><CircleAlert size={16}/>{loadError}</div>}
   {data&&data.problems.length>0&&<div className="notice warn" role="status"><CircleAlert size={16}/><ul>{data.problems.map(p=><li key={p}>{p}</li>)}</ul></div>}
-  <section className="settings-section"><h2>AI providers</h2><p className="section-note">One free key (Gemini or Groq) turns on "Write with AI" for titles, descriptions and hashtags. Keys stay on this computer{data?.file?` in ${data.file}`:''}.</p>
+  <div className="settings-layout"><nav className="settings-tabs" aria-label="Settings sections"><button type="button" className={tab==='ai'?'active':''} onClick={()=>setTab('ai')}><KeyRound size={16}/>AI providers</button><button type="button" className={tab==='ollama'?'active':''} onClick={()=>setTab('ollama')}><Cpu size={16}/>Ollama</button><button type="button" className={tab==='prefs'?'active':''} onClick={()=>setTab('prefs')}><SlidersHorizontal size={16}/>Preferences</button></nav><div className="settings-content">
+  {tab==='ai'&&<section className="settings-section"><h2>AI providers</h2><p className="section-note">One free key (Gemini or Groq) turns on "Write with AI" for titles, descriptions and hashtags. Keys stay on this computer{data?.file?` in ${data.file}`:''}.</p>
    {!data&&!loadError&&<p className="muted"><Loader2 size={14} className="spin"/>Loading…</p>}
    {data&&PROVIDERS.map(p=><KeyRow key={p.key} p={p} status={data.secrets[p.key]} onSave={save}/>)}
-  </section>
-  {data&&<section className="settings-section"><h2>Ollama on this computer</h2><p className="section-note">Free and private: install <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">Ollama</a>, run <code>ollama pull llama3.1</code>, then put the model name here.</p>
+  </section>}
+  {data&&tab==='ollama'&&<section className="settings-section"><h2>Ollama on this computer</h2><p className="section-note">Free and private: install <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">Ollama</a>, run <code>ollama pull llama3.1</code>, then put the model name here.</p>
    <ValuesForm keys={OLLAMA_KEYS} values={data.values} onSave={save}>{field=><>
     <div className="field"><label htmlFor="setting-OLLAMA_MODEL">Model</label><input type="text" {...field('OLLAMA_MODEL')} placeholder="llama3.1" autoComplete="off" spellCheck={false}/><small>A model you pulled with Ollama. Leave blank when using Ollama Cloud (the model then defaults to gpt-oss:120b).</small></div>
     <div className="field"><label htmlFor="setting-OLLAMA_HOST">Host</label><input type="text" {...field('OLLAMA_HOST')} placeholder="localhost:11434" autoComplete="off" spellCheck={false}/><small>Leave blank for this computer (localhost:11434), or type another machine on your network, for example 192.168.1.20:11434.</small></div>
    </>}</ValuesForm>
   </section>}
-  {data&&<section className="settings-section"><h2>Preferences</h2><p className="section-note">Which AI writes your YouTube text, and the region for trending titles.</p>
+  {data&&tab==='prefs'&&<section className="settings-section"><h2>Preferences</h2><p className="section-note">Which AI writes your YouTube text, and the region for trending titles.</p>
    <ValuesForm keys={PREF_KEYS} values={data.values} onSave={save}>{field=><>
     <div className="field"><label htmlFor="setting-METADATA_AI">Write with</label><Select {...field('METADATA_AI')}>{METADATA_CHOICES.map(([v,label])=><option key={v} value={v}>{label}</option>)}</Select></div>
     <div className="field"><label htmlFor="setting-YOUTUBE_REGION">YouTube region</label><input type="text" {...field('YOUTUBE_REGION')} placeholder="US" maxLength={2} autoComplete="off" spellCheck={false}/><small>Two-letter country code for YouTube’s trending chart, used as title-style context.</small></div>
@@ -89,6 +90,7 @@ export default function Settings(){
     </details>
    </>}</ValuesForm>
   </section>}
+  </div></div>
  </section>;
 }
 
