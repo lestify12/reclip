@@ -23,7 +23,7 @@ export default function Select({value,defaultValue,onChange,children,id,disabled
  const current=value!==undefined?String(value):inner,sel=opts.find(o=>o.value===current)||opts.find(o=>!o.disabled);
  const box=useRef<HTMLDivElement>(null),list=useRef<HTMLDivElement>(null),listId=useId();
  useEffect(()=>{if(!open)return;setHi(Math.max(0,opts.findIndex(o=>o.value===sel?.value)));
-  const away=(e:PointerEvent)=>{if(!box.current?.contains(e.target as Node))setOpen(false);},close=()=>setOpen(false);
+  const away=(e:PointerEvent)=>{if(!box.current?.contains(e.target as Node))setOpen(false);},close=(e?:Event)=>{if(e&&list.current&&e.target instanceof Node&&list.current.contains(e.target))return;setOpen(false);};
   document.addEventListener('pointerdown',away);window.addEventListener('resize',close);document.addEventListener('scroll',close,true);
   return()=>{document.removeEventListener('pointerdown',away);window.removeEventListener('resize',close);document.removeEventListener('scroll',close,true);};
  // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,7 +33,8 @@ export default function Select({value,defaultValue,onChange,children,id,disabled
   setPos(room>=h||r.top<room?{position:'fixed',left:r.left,width:r.width,top:r.bottom+6,maxHeight:Math.max(120,Math.min(320,room))}:{position:'fixed',left:r.left,width:r.width,bottom:window.innerHeight-r.top+6,maxHeight:Math.max(120,Math.min(320,r.top-12))});
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[open]);
- useEffect(()=>{if(open)list.current?.querySelector<HTMLElement>('[data-hi="true"]')?.scrollIntoView({block:'nearest'});},[open,hi]);
+ // Keep the highlighted row visible by scrolling the menu itself only (scrollIntoView could move the page and close the menu).
+ useEffect(()=>{const l=list.current,el=l?.querySelector<HTMLElement>('[data-hi="true"]');if(!open||!l||!el)return;const top=el.offsetTop-l.offsetTop,bottom=top+el.offsetHeight;if(top<l.scrollTop)l.scrollTop=top;else if(bottom>l.scrollTop+l.clientHeight)l.scrollTop=bottom-l.clientHeight;},[open,hi]);
  const pick=(o:Opt)=>{if(o.disabled)return;setOpen(false);if(value===undefined)setInner(o.value);onChange?.({target:{value:o.value}});};
  const key=(e:KeyboardEvent)=>{
   if(e.key==='Escape'){setOpen(false);return;}
