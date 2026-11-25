@@ -943,3 +943,9 @@ main{padding:0 32px}
 .settings-content{min-width:0;display:grid;gap:18px}
 .settings-section .key-row{padding:14px 0}
 @media(max-width:800px){.settings-layout{grid-template-columns:1fr}.settings-tabs{position:static;display:flex;flex-wrap:wrap}}
+
+/* ---------- Illustrated template previews ---------- */
+.template-preview-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.template-art{height:auto!important;aspect-ratio:9/16;padding:0!important;border-radius:8px;overflow:hidden}
+.np-stage.wide .template-preview-img{object-fit:contain;background:#0b0d12}
+.np-gallery .template-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
