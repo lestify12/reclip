@@ -26,7 +26,7 @@ export class TikTokAuto{
   return {enabled:d.enabled,displayName:d.displayName,connected:c.connected,connectedAs:c.displayName,configured:c.configured,accountMatches:!!d.accountId&&d.accountId===c.accountId,upcoming:soon,sentCount:Object.keys(d.sent).length,log:d.log.slice(0,20)};}
  /** Turning it on needs a connected account and an explicit yes; the yes covers that account only. */
  set({enabled,consent}={}){const d=readTikTokAuto(this.root);
-  if(enabled){const c=this.client.status();if(!c.connected)throw new Error('Connect TikTok first (Automation → TikTok setup).');if(consent!==true)throw new Error('Confirm that scheduled clips may be sent to your TikTok inbox.');
+  if(enabled){const c=this.client.status();if(!c.connected)throw new Error('Connect TikTok first in Settings → Accounts & sources.');if(consent!==true)throw new Error('Confirm that scheduled clips may be sent to your TikTok inbox.');
    Object.assign(d,{enabled:true,accountId:c.accountId,displayName:c.displayName,consentAt:new Date(this.now()).toISOString()});this.log(d,'info',`Turned on for ${c.displayName||'the connected account'}`);}
   else if(d.enabled){d.enabled=false;this.log(d,'info','Turned off');}
   write(this.root,d);return this.status();}

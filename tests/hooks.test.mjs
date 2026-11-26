@@ -16,8 +16,8 @@ test('Gen-Z hooks without AI: the true who-did-what event, reworded like a clip-
 test('Gen-Z hook voice: every template asks the AI for it unless it opts out, and the hooks keep their casing',()=>{
  const glow=EDIT_TEMPLATES.find(t=>t.id==='glow-card');assert.equal(glow.metadata.hookVoice,'genz');assert.equal(glow.settings.hookEnabled,true);assert.equal(glow.settings.hookPosition,'middle');
  assert.ok(templateStyle(glow.metadata).includes(GENZ_HOOK));for(const t of EDIT_TEMPLATES)assert.ok(templateStyle(t.metadata).includes(GENZ_HOOK),t.id);assert.ok(!templateStyle({...glow.metadata,hookVoice:'plain'}).includes(GENZ_HOOK),'opt-out');
- assert.match(batchPrompt({sourceTitle:'s',clips:[{index:0,people:[],transcript:'hi'}]}),/Gen-Z meme caption/,'clips without a template too');
- assert.match(GENZ_HOOK,/true to the transcript/);assert.match(GENZ_HOOK,/no swearing/);
+ assert.match(batchPrompt({sourceTitle:'s',clips:[{index:0,people:[],transcript:'hi'}]}),/stop the scroll/,'clips without a template too');
+ assert.match(GENZ_HOOK,/true to the transcript/);assert.match(GENZ_HOOK,/Do not reveal the ending/);assert.match(GENZ_HOOK,/no swearing/);
  assert.equal(genzCase('jynxzi got cooked by an NPC.'),'Jynxzi got cooked by an NPC');
 });
 test('Glow Card projects get Gen-Z hooks from local titles when no AI key is set',async()=>{

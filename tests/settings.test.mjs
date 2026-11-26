@@ -38,7 +38,7 @@ test('settings: unknown keys, non-text and line breaks are refused before anythi
  assert.throws(()=>writeSettings(['GEMINI_API_KEY'],{root,env:{}}),/object/);
  assert.throws(()=>writeSettings({YOUTUBE_REGION:'USA'},{root,env:{}}),/two-letter/);
  assert.throws(()=>writeSettings({METADATA_AI:'openai'},{root,env:{}}),/METADATA_AI/);
- assert.equal(read(),'PORT=5173\n');assert.equal(SETTINGS_FIELDS.length,16);
+ assert.equal(read(),'PORT=5173\n');assert.equal(SETTINGS_FIELDS.length,17);
 }));
 test('settings: a secret is never returned in full, only its last 4 characters',()=>withEnv('ANTHROPIC_API_KEY=sk-ant-api03-verysecretvalue-7777\nOPENAI_API_KEY=ab\n',(root)=>{
  const s=readSettings({root,env:{}}),json=JSON.stringify(s);

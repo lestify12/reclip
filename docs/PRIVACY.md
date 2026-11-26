@@ -21,7 +21,7 @@ Each of these services handles that data under its own privacy policy.
 
 ## Removing your data
 
-Disconnect YouTube or TikTok in Reclip's **Automation** page to delete their sign-in tokens; you can also revoke access in your Google or TikTok account settings. Deleting a project in Reclip deletes its files. Deleting the Reclip folder removes everything Reclip stored.
+Disconnect YouTube or TikTok in Reclip's **Settings → Accounts & sources** to delete their sign-in tokens; you can also revoke access in your Google or TikTok account settings. Deleting a project in Reclip deletes its files. Deleting the Reclip folder removes everything Reclip stored.
 
 ## Contact
 

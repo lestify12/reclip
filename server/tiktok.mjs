@@ -117,7 +117,7 @@ export class TikTokClient {
 
  async account(){
   const token=read(this.tokenFile);
-  if(!token||token.refreshExpiresAt<=Date.now())throw new Error('Connect TikTok in Automation before sending a video.');
+  if(!token||token.refreshExpiresAt<=Date.now())throw new Error('Connect TikTok in Settings → Accounts & sources before sending a video.');
   if(token.expiresAt>Date.now()+60_000)return token;
   if(!this.refreshing){
    this.refreshing=(async()=>{

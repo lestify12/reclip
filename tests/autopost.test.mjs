@@ -1,3 +1,5 @@
+// These tests are written in Manila time (UTC+8); release times follow RELEASE_TIME_ZONE.
+process.env.RELEASE_TIME_ZONE='Asia/Manila';
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';
 import {autoPostJob,hookTitle,postable,nextReleaseDay,validateAutopost,saveAutopost,loadAutopost} from '../server/autopost.mjs';
 import {PostingQueue} from '../server/posting.mjs';

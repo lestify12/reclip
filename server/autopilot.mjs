@@ -4,10 +4,10 @@
 // the upload log, the daily YouTube quota and the "never post the same moment twice" checks all still apply.
 import fs from 'node:fs';import path from 'node:path';import {writeJsonAtomic} from './atomic.mjs';
 import {helix,parseDuration} from './twitch-clips.mjs';import {parseSourceUrl,jobSource} from './sources.mjs';import {validateOptions} from './options.mjs';
-import {EDIT_TEMPLATES} from './templates.mjs';import {autoPostJob} from './autopost.mjs';
+import {EDIT_TEMPLATES} from './templates.mjs';import {autoPostJob} from './autopost.mjs';import {releaseZone} from './zone.mjs';
 
 export const AUTOPILOT_DEFAULTS={enabled:false,everyHours:4,lookbackHours:24,maxSourcesPerRun:1,minViews:5000,twitch:{channels:[],categories:[]},youtube:{channels:[]},
- perDay:6,times:['02:00','06:00','10:00','14:00','18:00','22:00'],timeZone:'Asia/Manila',template:'context-hit',outputFormat:'shorts',count:8,picker:'heuristic',titleStyle:'ai',madeForKids:false,skipWarnings:true};
+ perDay:6,times:['02:00','06:00','10:00','14:00','18:00','22:00'],timeZone:'',template:'context-hit',outputFormat:'shorts',count:8,picker:'heuristic',titleStyle:'ai',madeForKids:false,skipWarnings:true};
 const TIME=/^([01]\d|2[0-3]):[0-5]\d$/,LOGIN=/^[a-z0-9_]{3,25}$/;
 const int=(v,lo,hi,msg)=>{const n=Number(v);if(!Number.isInteger(n)||n<lo||n>hi)throw new Error(msg);return n;};
 const list=(v,max,msg)=>{if(!Array.isArray(v))throw new Error(msg);const out=[...new Set(v.map(s=>String(s).trim()).filter(Boolean))];if(out.length>max)throw new Error(msg);return out;};
@@ -23,11 +23,10 @@ export function validateAutopilot(input={}){
  if(!['shorts','video'].includes(s.outputFormat))throw new Error('Choose portrait or landscape');
  if(!['heuristic','openai','anthropic'].includes(s.picker))throw new Error('Invalid clip picker');
  if(!['ai','hook'].includes(s.titleStyle))throw new Error('Invalid title style');
- if(s.timeZone!=='Asia/Manila')throw new Error('Release times use Manila time for now');
  return {enabled:s.enabled,everyHours:int(s.everyHours,1,24,'Check every 1–24 hours'),lookbackHours:int(s.lookbackHours,6,72,'Look back 6–72 hours'),
   maxSourcesPerRun:int(s.maxSourcesPerRun,1,3,'Clip 1–3 sources per run'),minViews:int(s.minViews,0,1e9,'Minimum views must be 0 or more'),
   twitch:{channels,categories:list(s.twitch.categories,10,'Watch at most 10 Twitch categories')},youtube:{channels:list(s.youtube.channels,30,'Watch at most 30 YouTube channels')},
-  perDay:Math.min(int(s.perDay,1,6,'Schedule 1–6 clips a day'),times.length),times,timeZone:s.timeZone,template:s.template,outputFormat:s.outputFormat,
+  perDay:Math.min(int(s.perDay,1,6,'Schedule 1–6 clips a day'),times.length),times,timeZone:releaseZone(),template:s.template,outputFormat:s.outputFormat,
   count:int(s.count,3,24,'Find 3–24 clips per source'),picker:s.picker,titleStyle:s.titleStyle,madeForKids:s.madeForKids,skipWarnings:s.skipWarnings};
 }
 export const autopilotFile=root=>path.join(root,'posting','autopilot.json');
@@ -110,7 +109,11 @@ export class AutopilotEngine{
  }
  config(){return loadAutopilot(this.root);}
  log(level,message){const d=readAutopilot(this.root);d.log.unshift({at:new Date(this.now()).toISOString(),level,message:String(message).slice(0,300)});writeAutopilot(this.root,d);}
- status(){return {...this.state};}
+ status(){return {...this.state,current:this.current()};}
+ /** Auto-pilot's own projects that are still working, plus ones that finished in the last 12 hours, newest first. */
+ current(){const now=this.now();let jobs=[];try{jobs=this.store.list();}catch{return [];}
+  return jobs.filter(j=>j.autopilot&&(!DONE.includes(j.status)||now-Date.parse(j.updatedAt||j.createdAt)<12*3600e3)).slice(0,6).map(j=>({jobId:j.id,title:j.autopilot.title||j.title||'',creator:j.autopilot.creator||'',platform:j.autopilot.platform||j.source?.type||'',
+   status:j.status,stage:j.stage,progress:Number(j.progress)||0,message:j.message||'',startedAt:j.createdAt,clips:(j.clips||[]).length,scheduled:j.autoPosted?.scheduled?.length||0}));}
  /** (Re)start the timer from the saved config: the first run 30 s after turning on, then every `everyHours`. */
  start(){this.stop();if(!this.config().enabled)return;this.state.running=true;this.schedule(30e3);}
  stop(){if(this.timer)this.clearTimer(this.timer);this.timer=null;this.state.running=false;this.state.nextRunAt=null;}

@@ -1,3 +1,4 @@
+import {validZone} from './zone.mjs';
 // Settings screen: read and change the AI keys and preferences in .env from the app instead of a text editor.
 // Secrets never leave this module in full: the app only learns whether a key is set and its last 4 characters.
 // Writing keeps every other line of the file (comments, Twitch keys, ports) exactly as it was.
@@ -5,7 +6,7 @@ import fs from 'node:fs';import path from 'node:path';import dotenv from 'dotenv
 import {ROOT} from './config.mjs';import {loadEnv,decodeEnv} from './env.mjs';
 
 export const SECRET_FIELDS=['GEMINI_API_KEY','GROQ_API_KEY','ANTHROPIC_API_KEY','OPENAI_API_KEY','OLLAMA_API_KEY','YOUTUBE_API_KEY','TWITCH_CLIENT_SECRET'];
-export const VALUE_FIELDS=['GEMINI_MODEL','GROQ_MODEL','ANTHROPIC_MODEL','OPENAI_MODEL','OLLAMA_MODEL','OLLAMA_HOST','METADATA_AI','YOUTUBE_REGION','TWITCH_CLIENT_ID'];
+export const VALUE_FIELDS=['GEMINI_MODEL','GROQ_MODEL','ANTHROPIC_MODEL','OPENAI_MODEL','OLLAMA_MODEL','OLLAMA_HOST','METADATA_AI','YOUTUBE_REGION','TWITCH_CLIENT_ID','RELEASE_TIME_ZONE'];
 export const SETTINGS_FIELDS=[...SECRET_FIELDS,...VALUE_FIELDS];
 
 const readText=file=>{try{return decodeEnv(fs.readFileSync(file)).text;}catch{return '';}};
@@ -48,6 +49,7 @@ export function validateSettings(patch){
   if(value.length>4000)throw new Error(`${key} is too long`);
  }
  if(patch.YOUTUBE_REGION!==undefined&&patch.YOUTUBE_REGION.trim()&&!/^[A-Za-z]{2}$/.test(patch.YOUTUBE_REGION.trim()))throw new Error('YOUTUBE_REGION is a two-letter country code, for example US');
+ if(patch.RELEASE_TIME_ZONE!==undefined&&patch.RELEASE_TIME_ZONE.trim()&&!validZone(patch.RELEASE_TIME_ZONE))throw new Error('RELEASE_TIME_ZONE is a time zone name such as Asia/Dubai, or blank for this computer’s zone');
  if(patch.METADATA_AI!==undefined&&!['','gemini','groq','ollama','claude'].includes(patch.METADATA_AI.trim().toLowerCase()))throw new Error('METADATA_AI is blank, gemini, groq, ollama or claude');
  return patch;
 }

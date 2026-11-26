@@ -3,7 +3,7 @@
 // later by a new channel got 0–2 views), the rest are spread over the next days at fixed release times.
 // Off until the owner turns it on. Every safety of the calendar still applies: repeats of anything already uploaded
 // are skipped by the upload log, and YouTube's upload quota (about 6 uploads a day) is respected by daily batches.
-import fs from 'node:fs';import path from 'node:path';import {writeJsonAtomic} from './atomic.mjs';import {probe} from './process.mjs';import {publicationMetadata} from './context.mjs';
+import fs from 'node:fs';import path from 'node:path';import {writeJsonAtomic} from './atomic.mjs';import {probe} from './process.mjs';import {publicationMetadata} from './context.mjs';import {releaseZone,localDay,addDays} from './zone.mjs';
 
 export const AUTOPOST_DEFAULTS={enabled:false,postNow:2,times:['12:00','18:00','21:00'],maxScheduled:9,titleStyle:'hook',madeForKids:false,skipWarnings:true};
 export function validateAutopost(input={}){const s={...AUTOPOST_DEFAULTS,...input};
@@ -34,10 +34,10 @@ export function hookTitle(clip,meta,host,game=''){const hook=String(clip.setting
 export function postable(job,{skipWarnings=true}={}){const out=[];for(const c of job.clips||[]){if(c.kept===false||c.dirty||c.exportError)continue;const e=(job.exports||[]).find(x=>x.clipId===c.id);if(!e)continue;if(skipWarnings&&Array.isArray(e.checks)&&e.checks.length)continue;out.push({clip:c,output:e});}
  return out.sort((a,b)=>(b.clip.score||0)-(a.clip.score||0));}
 
-/** The first release day (YYYY-MM-DD, Manila) after the latest day already scheduled, or today. */
-export function nextReleaseDay(posts,now=Date.now()){const day=t=>new Date(t+8*3600e3).toISOString().slice(0,10);let last=null;
+/** The first release day (YYYY-MM-DD, in the release time zone) after the latest day already scheduled, or today. */
+export function nextReleaseDay(posts,now=Date.now(),zone=releaseZone()){const day=t=>localDay(t,zone);let last=null;
  for(const p of posts)if(p.state==='draft'&&p.settings?.privacy==='schedule'&&Date.parse(p.settings.publishAt)>now){const d=day(Date.parse(p.settings.publishAt));if(!last||d>last)last=d;}
- if(!last)return day(now);return day(Date.parse(`${last}T00:00:00+08:00`)+86400e3);}
+ if(!last)return day(now);return addDays(last,1);}
 
 /**
  * Send a finished project's best clips to the calendar: `postNow` upload as public right away, up to `maxScheduled`
@@ -54,6 +54,6 @@ export async function autoPostJob(job,{store,posting,youtube,settings,probeFile=
  const ok=made.filter(p=>p.id),first=ok.slice(0,settings.postNow),later=ok.slice(settings.postNow);
  // Right away: public uploads, picked up by the calendar's own minute timer (it never runs two batches at once).
  for(const p of first)posting.save({...posting.get(p.id),autoUpload:{at:new Date(now).toISOString()},state:'draft'});
- if(later.length){const start=nextReleaseDay(posting.list().filter(p=>!later.some(l=>l.id===p.id)),now);posting.schedule(later.map(p=>p.id),{start,times:settings.times,offset:'+08:00',daily:true,now});}
+ if(later.length){const start=nextReleaseDay(posting.list().filter(p=>!later.some(l=>l.id===p.id)),now);posting.schedule(later.map(p=>p.id),{start,times:settings.times,zone:releaseZone(),daily:true,now});}
  const result={now:first.map(p=>p.id),scheduled:later.map(p=>p.id),failed:made.filter(p=>!p.id),at:new Date(now).toISOString()};
  store.update(job.id,{autoPosted:result,...(first.length||later.length?{message:`${job.message||'Clips are ready'} · auto-post: ${first.length} uploading now, ${later.length} scheduled`}:{})});if(youtube?.status?.().connected&&first.length)posting.tick().catch(()=>{});return result;}

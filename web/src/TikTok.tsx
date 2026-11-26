@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {Copy,ExternalLink,Loader2,Settings2,Upload,X} from 'lucide-react';
+import {Copy,ExternalLink,Loader2,Settings2,Upload,X,Check} from 'lucide-react';
 
 type Connection={configured:boolean;connected:boolean;displayName:string;accountId:string|null};
 type Draft={caption:string;state:string;error?:string;checkable:boolean;resumable?:boolean;videoError?:string};
@@ -60,16 +60,16 @@ export function TikTokConnection(){
   finally{setBusy('');}
  }
  return <>
-  <section className="youtube-connection">
-   <div><h2>TikTok account</h2><p>{connection?.connected?`Connected to ${connection.displayName}`:'Send portrait videos from Publish to your TikTok Inbox for review.'}</p>
-    {error&&!setupOpen&&<p role="alert" className="trim-warning">{error}</p>}
+  <div className="key-row conn-row">
+   <div className="key-info"><strong>TikTok account</strong><small>{connection?.connected?'Clips go to this account’s TikTok inbox as drafts.':connection?.configured?'App keys saved. Connect your TikTok account next.':'One-time setup with your own TikTok for Developers app (its Sandbox works right away).'}</small></div>
+   <span className={`key-status ${connection?.connected?'set':'unset'}`}>{connection?.connected?<><Check size={14}/>{connection.displayName||'Connected'}</>:'Not connected'}</span>
+   <div className="conn-actions">
+    <button type="button" className="secondary" disabled={!connection||(!!busy&&busy!=='save')} aria-haspopup="dialog" onClick={()=>{setError('');setSetupOpen(true);dialog.current?.showModal();}}><Settings2 size={15}/>Setup</button>
+    {connection?.connected?<button type="button" className="secondary" disabled={!!busy} onClick={disconnect}>Disconnect</button>:
+     <button type="button" className="primary" disabled={!connection?.configured||!!busy} onClick={connect}>Connect<ExternalLink size={14}/></button>}
    </div>
-   <div className="connection-actions">
-    <button type="button" className="secondary" disabled={!connection||(!!busy&&busy!=='save')} aria-haspopup="dialog" onClick={()=>{setError('');setSetupOpen(true);dialog.current?.showModal();}}><Settings2 size={15}/>TikTok setup</button>
-    {connection?.connected?<button type="button" className="secondary" disabled={!!busy} onClick={disconnect}>Disconnect TikTok</button>:
-     <button type="button" className="primary" disabled={!connection?.configured||!!busy} onClick={connect}>Connect TikTok<ExternalLink size={15}/></button>}
-   </div>
-  </section>
+   {error&&!setupOpen&&<p role="alert" className="field-error">{error}</p>}
+  </div>
   <dialog ref={dialog} className="youtube-setup-dialog tiktok-setup-dialog" aria-labelledby="tiktok-setup-title" onCancel={e=>{if(busy)e.preventDefault();}} onClose={()=>{setClientKey('');setClientSecret('');setError('');setSetupOpen(false);}}>
    <h2 id="tiktok-setup-title"><Settings2 size={20}/>Set up TikTok access</h2>
    <ol>
@@ -125,7 +125,7 @@ export function TikTokPost({post,onClose,onConnect}:{post:CalendarPost;onClose:(
   <div className="post-editor-body">
    <div className="post-editor-media"><video controls preload="metadata" src={`${endpoint}/video`}/></div>
    <div className="post-editor-fields">
-    {connection?.connected?<p>Send to <strong>{connection.displayName}</strong> for review.</p>:connection&&<p>TikTok is not connected. <button type="button" className="text-button" onClick={()=>{dialog.current?.close();onConnect();}}>Connect in Automation</button></p>}
+    {connection?.connected?<p>Send to <strong>{connection.displayName}</strong> for review.</p>:connection&&<p>TikTok is not connected. <button type="button" className="text-button" onClick={()=>{dialog.current?.close();onConnect();}}>Connect in Settings</button></p>}
     {draft&&<>
      <label>TikTok caption and hashtags <span className="counter">{caption.length}/2200</span><textarea rows={6} value={caption} maxLength={2200} disabled={!!busy} onChange={e=>{setCaption(e.target.value);setNotice('');}}/></label>
      <button type="button" className="secondary tiktok-copy" disabled={!caption.trim()} onClick={()=>navigator.clipboard.writeText(caption).then(()=>setNotice('TikTok caption copied.')).catch(()=>setError('Select the caption field and copy it manually.'))}><Copy size={15}/>Copy caption</button>

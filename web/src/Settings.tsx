@@ -1,4 +1,4 @@
-import Select from './Select';
+import Select from './Select';import {YouTubeConnection,TikTokAccount} from './Connections';
 import {useEffect,useState,type FormEvent,type ReactNode} from 'react';
 import {KeyRound,Check,Trash2,ExternalLink,Loader2,CircleAlert,Cpu,SlidersHorizontal,Radar} from 'lucide-react';
 
@@ -13,6 +13,7 @@ const PROVIDERS:Provider[]=[
 const SOURCES:Provider[]=[
  {key:'TWITCH_CLIENT_SECRET',name:'Twitch app secret',cost:'Free',does:'With the client id below, lets Auto-pilot read live viewers, VODs and the clips viewers made. Make an app at dev.twitch.tv (any redirect such as http://localhost, category Other).',link:'https://dev.twitch.tv/console/apps'},
  {key:'YOUTUBE_API_KEY',name:'YouTube Data API key',cost:'Free',does:'Lets Auto-pilot read a channel’s newest videos and view counts. Make it in a separate Google Cloud project so its quota never competes with your uploads.',link:'https://console.cloud.google.com/apis/credentials'}];
+const ZONES=['Asia/Dubai','Asia/Riyadh','Asia/Karachi','Asia/Kolkata','Asia/Manila','Asia/Singapore','Asia/Tokyo','Australia/Sydney','Europe/London','Europe/Paris','Europe/Berlin','Africa/Cairo','America/New_York','America/Chicago','America/Denver','America/Los_Angeles','America/Sao_Paulo','UTC'];
 const METADATA_CHOICES:[string,string][]=[['','Automatic (Gemini, then Groq, then Ollama, then Claude)'],['gemini','Gemini'],['groq','Groq'],['ollama','Ollama'],['claude','Claude']];
 
 const getSettings=()=>fetch('/api/settings').then(r=>r.ok?r.json() as Promise<SettingsData>:Promise.reject(new Error('Couldn’t read the settings')));
@@ -59,21 +60,24 @@ function ValuesForm({keys,values,onSave,children}:{keys:string[];values:Record<s
  </form>;
 }
 
-const OLLAMA_KEYS=['OLLAMA_MODEL','OLLAMA_HOST'],PREF_KEYS=['METADATA_AI','YOUTUBE_REGION','GEMINI_MODEL','GROQ_MODEL','ANTHROPIC_MODEL','OPENAI_MODEL'];
+const OLLAMA_KEYS=['OLLAMA_MODEL','OLLAMA_HOST'],PREF_KEYS=['METADATA_AI','RELEASE_TIME_ZONE','YOUTUBE_REGION','GEMINI_MODEL','GROQ_MODEL','ANTHROPIC_MODEL','OPENAI_MODEL'];
 
 /** Settings screen: AI keys and preferences, saved straight into .env. */
-export default function Settings(){
- const [data,setData]=useState<SettingsData|null>(null),[loadError,setLoadError]=useState(''),[tab,setTab]=useState<'ai'|'ollama'|'prefs'|'sources'>('ai');
+export default function Settings({tab:startTab='ai'}:{tab?:'ai'|'ollama'|'prefs'|'sources'}={}){
+ const [data,setData]=useState<SettingsData|null>(null),[loadError,setLoadError]=useState(''),[tab,setTab]=useState<'ai'|'ollama'|'prefs'|'sources'>(startTab);
  useEffect(()=>{getSettings().then(setData).catch(e=>setLoadError((e as Error).message));},[]);
  const save=async(patch:Record<string,string>)=>{setData(await postSettings(patch));};
  return <section className="settings-screen">
   <header className="screen-heading"><h1>Settings</h1><p>AI keys and preferences. Everything is saved to the .env file in the Reclip folder and applies right away, no restart needed.</p></header>
   {loadError&&<div className="notice warn" role="alert"><CircleAlert size={16}/>{loadError}</div>}
   {data&&data.problems.length>0&&<div className="notice warn" role="status"><CircleAlert size={16}/><ul>{data.problems.map(p=><li key={p}>{p}</li>)}</ul></div>}
-  <div className="settings-layout"><nav className="settings-tabs" aria-label="Settings sections"><button type="button" className={tab==='ai'?'active':''} onClick={()=>setTab('ai')}><KeyRound size={16}/>AI providers</button><button type="button" className={tab==='ollama'?'active':''} onClick={()=>setTab('ollama')}><Cpu size={16}/>Ollama</button><button type="button" className={tab==='prefs'?'active':''} onClick={()=>setTab('prefs')}><SlidersHorizontal size={16}/>Preferences</button><button type="button" className={tab==='sources'?'active':''} onClick={()=>setTab('sources')}><Radar size={16}/>Sources</button></nav><div className="settings-content">
+  <div className="settings-layout"><nav className="settings-tabs" aria-label="Settings sections"><button type="button" className={tab==='ai'?'active':''} onClick={()=>setTab('ai')}><KeyRound size={16}/>AI providers</button><button type="button" className={tab==='ollama'?'active':''} onClick={()=>setTab('ollama')}><Cpu size={16}/>Ollama</button><button type="button" className={tab==='prefs'?'active':''} onClick={()=>setTab('prefs')}><SlidersHorizontal size={16}/>Preferences</button><button type="button" className={tab==='sources'?'active':''} onClick={()=>setTab('sources')}><Radar size={16}/>Accounts & sources</button></nav><div className="settings-content">
   {tab==='ai'&&<section className="settings-section"><h2>AI providers</h2><p className="section-note">One free key (Gemini or Groq) turns on "Write with AI" for titles, descriptions and hashtags. Keys stay on this computer{data?.file?` in ${data.file}`:''}.</p>
    {!data&&!loadError&&<p className="muted"><Loader2 size={14} className="spin"/>Loading…</p>}
    {data&&PROVIDERS.map(p=><KeyRow key={p.key} p={p} status={data.secrets[p.key]} onSave={save}/>)}
+  </section>}
+  {tab==='sources'&&<section className="settings-section"><h2>Accounts</h2><p className="section-note">Where your clips go. Publish uploads to YouTube and sends portrait clips to your TikTok inbox.</p>
+   <YouTubeConnection/><TikTokAccount/>
   </section>}
   {data&&tab==='sources'&&<section className="settings-section"><h2>Sources for Auto-pilot</h2><p className="section-note">Free keys that let Auto-pilot see what is hot on Twitch and YouTube. Nothing is posted with them.</p>
    <ValuesForm keys={['TWITCH_CLIENT_ID']} values={data.values} onSave={save}>{field=><div className="field"><label htmlFor="setting-TWITCH_CLIENT_ID">Twitch client id</label><input type="text" {...field('TWITCH_CLIENT_ID')} placeholder="abc123…" autoComplete="off" spellCheck={false}/><small>From your Twitch app’s page. The secret goes in the row below.</small></div>}</ValuesForm>
@@ -88,6 +92,7 @@ export default function Settings(){
   {data&&tab==='prefs'&&<section className="settings-section"><h2>Preferences</h2><p className="section-note">Which AI writes your YouTube text, and the region for trending titles.</p>
    <ValuesForm keys={PREF_KEYS} values={data.values} onSave={save}>{field=><>
     <div className="field"><label htmlFor="setting-METADATA_AI">Write with</label><Select {...field('METADATA_AI')}>{METADATA_CHOICES.map(([v,label])=><option key={v} value={v}>{label}</option>)}</Select></div>
+    <div className="field"><label htmlFor="setting-RELEASE_TIME_ZONE">Release time zone</label><Select {...field('RELEASE_TIME_ZONE')}><option value="">This computer ({Intl.DateTimeFormat().resolvedOptions().timeZone})</option>{ZONES.map(z=><option key={z} value={z}>{z.replace(/_/g,' ')}</option>)}</Select><small>Daily release times in Publish and Auto-pilot are read in this zone.</small></div>
     <div className="field"><label htmlFor="setting-YOUTUBE_REGION">YouTube region</label><input type="text" {...field('YOUTUBE_REGION')} placeholder="US" maxLength={2} autoComplete="off" spellCheck={false}/><small>Two-letter country code for YouTube’s trending chart, used as title-style context.</small></div>
     <details className="advanced"><summary>Model names</summary>
      <div className="field"><label htmlFor="setting-GEMINI_MODEL">Gemini model</label><input type="text" {...field('GEMINI_MODEL')} placeholder="gemini-3.8-flash" autoComplete="off" spellCheck={false}/></div>

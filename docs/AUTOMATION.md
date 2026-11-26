@@ -1,13 +1,13 @@
-# Video and stream automation
+# Accounts, uploads and command-line automation
 
-Open **Automation** in the top bar. Choose a source, template, context and metadata rules, then save a repeatable workflow. **Private upload for review is the UI default.** With no connected account, choose **Prepare files only** to clip/edit and generate the upload package locally.
+Scheduled clipping now lives in **Auto-pilot** (top bar): it watches streamers and channels, clips the most hyped source and schedules the best clips (see the README). This page covers connecting YouTube and TikTok, both in **Settings → Accounts & sources**, how uploads behave, and the command-line workflow scripts (`npm run automate`), which keep working for repeatable single-source jobs such as recording one live stream in segments.
 
 ## Connect YouTube once
 
 1. Create a [Google Cloud project](https://console.cloud.google.com/) and enable YouTube Data API v3.
 2. Configure its OAuth consent screen. Add your Google account as a test user while the application is in Testing.
 3. Create an OAuth client with application type **Desktop app** and download its JSON file.
-4. Open **Automation → YouTube setup**, paste the JSON or choose the file, then click **Save credentials**. Click **Connect YouTube** and authorize the channel shown by Google.
+4. Open **Settings → Accounts & sources → YouTube channel → Setup**, paste the JSON or choose the file, then click **Save credentials**. Click **Connect YouTube** and authorize the channel shown by Google.
 
 The app uses a loopback callback, PKCE, a one-time state token, and offline refresh credentials. The browser receives only connection status and the channel name. OAuth files remain under `.cache/youtube/`; upload-session URLs remain under `work/automations/`. These locations are ignored by Git and excluded from source packages. Treat a copy of this working folder as containing account credentials. Disconnect stops enabled workflows and removes the saved token. Google consent-screen Testing and app-verification requirements can affect how long authorization lasts; see [installed-app OAuth](https://developers.google.com/identity/protocols/oauth2/native-app).
 
@@ -18,7 +18,7 @@ No Google credentials are included.
 > **Login says "client_key"?** The app isn't approved for production yet. Switch it to **Sandbox** in TikTok for Developers, add Login Kit and the Content Posting API there, register the redirect URI shown in Reclip, add your TikTok account under **Target users**, and save the Sandbox client key and secret in Reclip.
 
 1. Register a Desktop app in [TikTok for Developers](https://developers.tiktok.com/apps/). Add [Desktop Login Kit](https://developers.tiktok.com/docs/en/login-kit-desktop) and the [Content Posting API](https://developers.tiktok.com/docs/en/content-posting-api-get-started-upload-content). Request `user.info.basic` and `video.upload`; TikTok must approve video upload access for the app.
-2. In **Automation → TikTok setup**, copy the redirect URI displayed for your local Reclip address. Register that exact URI in Desktop Login Kit. Save your TikTok Client key and Client secret in the dialog, then choose **Connect TikTok** and authorize the account.
+2. In **Settings → Accounts & sources → TikTok account → Setup**, copy the redirect URI displayed for your local Reclip address. Register that exact URI in Desktop Login Kit. Save your TikTok Client key and Client secret in the dialog, then choose **Connect TikTok** and authorize the account.
 3. In **Publish**, select **TikTok** on a portrait export you’re authorized to share. Review the video and edit the separate TikTok caption and hashtags. Use **Save caption** to keep your edits and **Copy caption** to paste them into TikTok.
 4. Confirm the upload and choose **Send to TikTok Inbox**. Use **Check TikTok status** to check delivery, then open the Inbox notification to paste the caption and publish in TikTok. YouTube scheduling works independently.
 
@@ -74,13 +74,13 @@ npm run automate -- --resume YOUR_SCRIPT_ID --watch
 npm run automate -- --stop YOUR_SCRIPT_ID
 ```
 
-The [example script](automation/example-script.json) selects private uploads and requires a connected channel. Change `posting` to `prepare` and `publishingEnabled` to `false` to run locally without credentials. In the UI, **Edit script JSON** exposes the same configuration; each saved workflow has a download button. Logs, prepared metadata, source jobs and remote video IDs appear in Automation.
+The [example script](automation/example-script.json) selects private uploads and requires a connected channel. Change `posting` to `prepare` and `publishingEnabled` to `false` to run locally without credentials. Progress, prepared metadata and remote video IDs are printed in the terminal with `--watch`, and each source becomes a normal project you can open from **Projects**.
 
 ## Reference-inspired templates
 
 Context Hit, Word Punch, White Editorial, Reaction Context and Ranked Moments were designed after inspecting actual frames from the five supplied reference Shorts. Public previews use original graphics, manually timed words and synthetic audio; downloaded reference footage is kept out of Git and public assets. See [the research report](../reports/Reference%20edit%20automation.md).
 
-The local template picker and Automation preview now include **Original reference / Template output** modes. Original mode streams the complete cached video without transcoding, trimming, cropping or replacing its audio. The sample controls and frame scrubber sit outside the picture. A timecoded observation list covers headline, captions, contextual labels, framing/color changes, graphics and source overlays, alongside the full video/audio streams. Original playback is the timing authority; inspection notes distinguish measured boundaries from estimates and are not editable original-project tracks. Missing originals can be loaded through the UI or `npm run setup:references`.
+The template picker now includes **Original reference / Template output** modes. Original mode streams the complete cached video without transcoding, trimming, cropping or replacing its audio. The sample controls and frame scrubber sit outside the picture. A timecoded observation list covers headline, captions, contextual labels, framing/color changes, graphics and source overlays, alongside the full video/audio streams. Original playback is the timing authority; inspection notes distinguish measured boundaries from estimates and are not editable original-project tracks. Missing originals can be loaded through the UI or `npm run setup:references`.
 
 Ranked Moments builds a real countdown from **2–5 distinct selected clips**, sorted from lower selection score to higher. Those scores express local editing suitability, not an objective ranking of entertainment value. Edit the per-clip names and compilation title to make the series meaningful. The finished compilation must fit within three minutes; changing its inputs invalidates the prior download.
 

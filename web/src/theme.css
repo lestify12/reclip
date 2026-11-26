@@ -1143,3 +1143,29 @@ main{padding-top:28px;padding-bottom:40px}
 .tt-auto h2>svg{color:#ff5c8a}
 .tt-auto .np-note{display:block;line-height:1.5}.tt-auto .np-note svg{vertical-align:-2px;color:var(--orange)}
 .tt-consent{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.45}.tt-consent input{margin-top:3px;accent-color:var(--accent);flex:none}
+
+/* ---------- Auto-pilot: Now clipping ---------- */
+.ap-now{gap:16px}
+.ap-job{display:grid;gap:10px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--paper-2)}
+.ap-job+.ap-job{margin-top:0}
+.ap-job-head{display:flex;align-items:center;gap:10px;min-width:0}
+.ap-job-title{flex:1;min-width:0;display:grid;gap:2px}.ap-job-title strong{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ap-job-title small{color:var(--ink-soft);font-size:12px}
+.ap-job-pct{font:500 13px/1 Work,sans-serif;padding:6px 10px;border-radius:8px;background:var(--paper-3);white-space:nowrap}
+.ap-job-head .secondary{min-height:32px;padding:0 12px;font-size:13px}
+.ap-job-msg{color:var(--ink-soft);font-size:12.5px}
+.ap-job.queued .progress-track>i{background:var(--line-strong);box-shadow:none}
+.ap-job.done .progress-track>i{background:var(--lime);box-shadow:none}.ap-job.done .ap-job-pct{background:#2fbf7122;color:var(--lime)}
+.ap-job.failed .progress-track>i{background:var(--red);box-shadow:none}.ap-job.failed .ap-job-pct{background:#e5484d1f;color:#ff8a80}
+.stage-rail>span.current{font:600 12.5px/1 Work,sans-serif;letter-spacing:0}
+
+/* ---------- Settings: accounts (YouTube, TikTok) ---------- */
+.conn-row{grid-template-columns:minmax(180px,1.1fr) auto auto}
+.conn-actions{display:flex;gap:8px;justify-content:flex-end}.conn-actions .primary,.conn-actions .secondary{min-height:36px;padding:0 12px;font-size:13px}
+.conn-row .field-error,.conn-row .conn-message{grid-column:1/-1;margin:0}.conn-message{display:flex;align-items:center;gap:6px;color:var(--lime)}
+.conn-tiktok .key-row{border-top:1px solid var(--line)}
+.youtube-setup-dialog{background:var(--paper);border:1px solid var(--line-strong);border-radius:14px;box-shadow:var(--shadow-lg);color:var(--ink)}
+.youtube-setup-dialog h2{display:flex;align-items:center;gap:8px;margin:0;font:400 20px/1.2 var(--display)}
+.youtube-setup-dialog p,.youtube-setup-dialog li{font-size:14px;line-height:1.5}
+.youtube-setup-dialog code{font-size:12.5px;background:var(--paper-3);padding:2px 6px;border-radius:6px}
+.youtube-guide-steps button{background:var(--paper-2);border:1px solid var(--line);color:var(--ink)}.youtube-guide-steps button:hover,.youtube-guide-steps button[aria-current=step]{background:var(--paper-3);border-color:var(--accent)}
+@media(max-width:800px){.conn-row{grid-template-columns:1fr}.conn-actions{justify-content:flex-start}}

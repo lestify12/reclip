@@ -2,7 +2,7 @@
 
 Reclip uploads to YouTube through **your own** small Google app. Setting it up takes about 10 minutes, is free, needs no credit card, and you only do it once. The app's details stay on your computer.
 
-The same steps are inside Reclip: **Automation → YouTube setup**.
+The same steps are inside Reclip: **Settings → Accounts & sources → YouTube channel → Setup**.
 
 **What you need:** the Google account that owns your YouTube channel, and Reclip running.
 
@@ -61,7 +61,7 @@ Your new project has to be allowed to talk to YouTube.
 
 ## Step 4. Give the JSON file to Reclip
 
-1. In Reclip, open **Automation → YouTube setup**.
+1. In Reclip, open **Settings → Accounts & sources → YouTube channel → Setup**.
 2. Click **Choose JSON file** and pick the `client_secret_….json` from your Downloads.
    - You can also open the file in Notepad, copy everything and paste it into the box.
 3. Click **Save credentials**. The file is saved on this computer only.
@@ -80,7 +80,7 @@ Done. In **Publish** you can now upload, schedule and auto-post, and **Auto-pilo
 
 - **Uploads start private.** YouTube keeps uploads from new Google projects private until it audits the project. Reclip uploads privately by default. When you're ready, switch a video to public in YouTube Studio. If you want public uploads straight from Reclip, apply through Google's YouTube API audit form.
 - **About 6 uploads a day.** Google's free quota covers about 6 uploads a day per project. It resets at midnight Pacific Time.
-- **Changing account or app:** click **Disconnect**, then open **YouTube setup** again.
+- **Changing account or app:** click **Disconnect**, then click **Setup** again.
 
 ---
 

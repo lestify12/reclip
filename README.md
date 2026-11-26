@@ -44,7 +44,7 @@ Give Auto-pilot a watchlist of Twitch streamers, Twitch categories and YouTube c
 ### Settings
 ![Settings: paste AI keys and source keys in the app; they are saved to .env on this computer](docs/media/settings.jpg)
 
-Paste your AI keys (Gemini and Groq are free) and the Auto-pilot source keys right in the app. They are saved to the `.env` file in the Reclip folder and apply immediately.
+Paste your AI keys (Gemini and Groq are free), connect your YouTube channel and TikTok account, add the Auto-pilot source keys, and set the release time zone, all in the app. Keys are saved to the `.env` file in the Reclip folder and apply immediately.
 
 ## What it does
 
@@ -130,7 +130,7 @@ npm start
 
 Setup uses `uv` to create the project's Python 3.12 environment and install the transcription and video download tools. Open <http://localhost:5173> in your browser once the server starts. Keep Terminal open while you use the app and press `Control+C` to stop it.
 
-**3. Test an export.** Import a short MP4 with clear speech, make a portrait clip and download the result. The first transcription downloads a Whisper model. To add face-follow framing, run `npm run setup:faces` from the project folder. You can make and export clips without an account or API key. To connect YouTube or TikTok for posting, open **Automation**. [Posting and account setup](docs/AUTOMATION.md)
+**3. Test an export.** Import a short MP4 with clear speech, make a portrait clip and download the result. The first transcription downloads a Whisper model. To add face-follow framing, run `npm run setup:faces` from the project folder. You can make and export clips without an account or API key. To connect YouTube or TikTok for posting, open **Settings → Accounts & sources**. [Posting and account setup](docs/AUTOMATION.md)
 
 **Open it again later.** In a new Terminal window, run:
 
@@ -306,19 +306,19 @@ The project page shows the rules it used. The brief is pasted text (Whop pages n
 
 1. In **Settings → Sources**, add a free Twitch app (client id and secret, from [dev.twitch.tv](https://dev.twitch.tv/console/apps)) and/or a free **YouTube Data API key**. Make the YouTube key in a separate Google Cloud project, so its quota never competes with your uploads.
 2. In **Auto-pilot → Watchlist**, list Twitch streamers, Twitch categories and YouTube channels.
-3. Set the rules: how often to check, how far back to look, the minimum hype, the template, and up to six daily release times (Manila time).
+3. Set the rules: how often to check, how far back to look, the minimum hype, the template, and up to six daily release times (in your release time zone).
 4. Press **Scout now** to see what it would pick, then **Turn on**.
 
 Every run scores recent streams and videos by views, live viewers and the clips viewers made, sends the most hyped fresh one through the normal clipping pipeline, and when it finishes schedules its best clips in **Publish**. A source is never clipped twice, and Auto-pilot waits while two days of clips are already queued. YouTube's free quota covers about six uploads a day, and new Google Cloud projects upload as private until YouTube audits them. Only clip streams and videos you have permission to use.
 
 ## Optional: posting to YouTube
 
-**📘 Step-by-step guide with fixes for every common error: [docs/YOUTUBE-SETUP.md](docs/YOUTUBE-SETUP.md).** The same guide is inside Reclip under **Automation → YouTube setup**. The short version:
+**📘 Step-by-step guide with fixes for every common error: [docs/YOUTUBE-SETUP.md](docs/YOUTUBE-SETUP.md).** The same guide is inside Reclip under **Settings → Accounts & sources → YouTube channel → Setup**. The short version:
 
 1. Do everything with **the Google account that owns your YouTube channel**. If you have several accounts, use a private/incognito window.
 2. Open [Google's Personal setup page](https://console.cloud.google.com/auth/overview/personal). Keep the suggested project, choose Application type **Desktop app**, agree, click **Continue**, then click **Download JSON** before closing the window (Google shows the secret only once).
 3. In the same project, enable [YouTube Data API v3](https://console.cloud.google.com/apis/library/youtube.googleapis.com).
-4. In **Automation → YouTube setup**, choose the JSON file and click **Save credentials**. Then click **Connect YouTube**, sign in with the same account and tick every box.
+4. In **Settings → Accounts & sources → YouTube channel → Setup**, choose the JSON file and click **Save credentials**. Then click **Connect YouTube**, sign in with the same account and tick every box.
 5. Open **Publish**, add edited clips (or any finished MP4), edit the title, description and tags, and save drafts.
 6. Tick drafts and press **Upload**, or use **Schedule selected** to spread them over the days. Uploads are **private by default**. A scheduled post uploads now and YouTube publishes it at the time you set. New Google Cloud projects may be limited to private uploads until Google audits them.
 7. Optional: in **Publish → Auto-post**, turn on auto-posting. When a project finishes, its best clean clips (kept, exported, no warnings) upload as public right away (2 by default) and up to 9 more are scheduled at your daily release times, using titles built from the on-screen hook with an emoji and hashtags. Each project auto-posts once, and nothing already uploaded is uploaded again. YouTube allows about 6 uploads a day by default, so keep the numbers near that.
@@ -327,11 +327,11 @@ Every run scores recent streams and videos by views, live viewers and the clips 
 
 **Automatic thumbnails.** When you add a regular (horizontal) video to Publish, Reclip makes a 1280×720 thumbnail from the clip's project: the streamer's biggest reaction cut out with a white outline over a bright gameplay frame, two to four big words from the clip title (or your own), the game name, and an optional LIVE badge. Change the words or make it again from the post's thumbnail panel. YouTube does not let apps set a Shorts thumbnail, so for Shorts the panel makes an image to download and set in the YouTube app. The official game logo is never used; the game name is drawn in Reclip's own lettering. Run `npm run setup:faces` once to download the face models.
 
-An upload log stops the same file from being uploaded twice, unless you choose **Upload anyway**. Scheduled times currently use UTC+8. See [docs/AUTOMATION.md](docs/AUTOMATION.md) for live-stream capture, repeatable automation scripts and their limits.
+An upload log stops the same file from being uploaded twice, unless you choose **Upload anyway**. Scheduled times use your release time zone (**Settings → Preferences**; by default, this computer’s zone). See [docs/AUTOMATION.md](docs/AUTOMATION.md) for live-stream capture, repeatable automation scripts and their limits.
 
 ## Optional: posting to TikTok
 
-Reclip can send portrait exports to your **TikTok inbox**: the video arrives as a draft with its caption, and you tap Post in the TikTok app. TikTok's API doesn't let apps schedule or publish publicly on their own, so that tap stays yours. Set it up once in **Automation → TikTok setup** with your own TikTok for Developers app. Then either pick **TikTok** on a post in **Publish**, or turn on **TikTok at release time** (in Publish or Auto-pilot) so every scheduled portrait clip goes to your inbox the moment it goes live on YouTube.
+Reclip can send portrait exports to your **TikTok inbox**: the video arrives as a draft with its caption, and you tap Post in the TikTok app. TikTok's API doesn't let apps schedule or publish publicly on their own, so that tap stays yours. Set it up once in **Settings → Accounts & sources → TikTok account → Setup** with your own TikTok for Developers app. Then either pick **TikTok** on a post in **Publish**, or turn on **TikTok at release time** (in Publish or Auto-pilot) so every scheduled portrait clip goes to your inbox the moment it goes live on YouTube.
 
 **TikTok login says "client_key".** Your app isn't approved for production yet. Use its **Sandbox**: in TikTok for Developers, switch the app to Sandbox, add Login Kit and the Content Posting API there, register the redirect URI that Reclip's TikTok setup shows, add your TikTok account under **Target users**, and save the **Sandbox** client key and secret in Reclip. The full steps and limits are in [docs/AUTOMATION.md](docs/AUTOMATION.md#connect-tiktok-for-inbox-uploads).
 
