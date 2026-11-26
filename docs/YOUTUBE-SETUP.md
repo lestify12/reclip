@@ -74,7 +74,7 @@ Your new project has to be allowed to talk to YouTube.
 4. On the permission page, **tick every box** and click **Continue**.
 5. The tab says **YouTube connected**. Close it. Reclip now shows your channel name.
 
-Done. In **Posting calendar** you can now upload, schedule and auto-post.
+Done. In **Publish** you can now upload, schedule and auto-post, and **Auto-pilot** can keep clips going out daily.
 
 ### Good to know
 

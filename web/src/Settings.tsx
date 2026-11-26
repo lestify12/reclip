@@ -12,7 +12,7 @@ const PROVIDERS:Provider[]=[
  {key:'OLLAMA_API_KEY',name:'Ollama Cloud',cost:'Free tier',does:'Runs the writer on Ollama Cloud instead of this computer.',link:'https://ollama.com/settings/keys'}];
 const SOURCES:Provider[]=[
  {key:'TWITCH_CLIENT_SECRET',name:'Twitch app secret',cost:'Free',does:'With the client id below, lets Auto-pilot read live viewers, VODs and the clips viewers made. Make an app at dev.twitch.tv (any redirect such as http://localhost, category Other).',link:'https://dev.twitch.tv/console/apps'},
- {key:'YOUTUBE_API_KEY',name:'YouTube Data API key',cost:'Free',does:'Lets Auto-pilot read a channel’s newest videos and view counts. Create an API key in the same Google Cloud project you use for YouTube uploads.',link:'https://console.cloud.google.com/apis/credentials'}];
+ {key:'YOUTUBE_API_KEY',name:'YouTube Data API key',cost:'Free',does:'Lets Auto-pilot read a channel’s newest videos and view counts. Make it in a separate Google Cloud project so its quota never competes with your uploads.',link:'https://console.cloud.google.com/apis/credentials'}];
 const METADATA_CHOICES:[string,string][]=[['','Automatic (Gemini, then Groq, then Ollama, then Claude)'],['gemini','Gemini'],['groq','Groq'],['ollama','Ollama'],['claude','Claude']];
 
 const getSettings=()=>fetch('/api/settings').then(r=>r.ok?r.json() as Promise<SettingsData>:Promise.reject(new Error('Couldn’t read the settings')));

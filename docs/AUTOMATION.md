@@ -1,6 +1,6 @@
 # Video and stream automation
 
-Open **Automation** in the sidebar. Choose a source, template, context and metadata rules, then save a repeatable workflow. **Private upload for review is the UI default.** With no connected account, choose **Prepare files only** to clip/edit and generate the upload package locally.
+Open **Automation** in the top bar. Choose a source, template, context and metadata rules, then save a repeatable workflow. **Private upload for review is the UI default.** With no connected account, choose **Prepare files only** to clip/edit and generate the upload package locally.
 
 ## Connect YouTube once
 
@@ -15,9 +15,11 @@ No Google credentials are included.
 
 ## Connect TikTok for inbox uploads
 
+> **Login says "client_key"?** The app isn't approved for production yet. Switch it to **Sandbox** in TikTok for Developers, add Login Kit and the Content Posting API there, register the redirect URI shown in Reclip, add your TikTok account under **Target users**, and save the Sandbox client key and secret in Reclip.
+
 1. Register a Desktop app in [TikTok for Developers](https://developers.tiktok.com/apps/). Add [Desktop Login Kit](https://developers.tiktok.com/docs/en/login-kit-desktop) and the [Content Posting API](https://developers.tiktok.com/docs/en/content-posting-api-get-started-upload-content). Request `user.info.basic` and `video.upload`; TikTok must approve video upload access for the app.
 2. In **Automation → TikTok setup**, copy the redirect URI displayed for your local Reclip address. Register that exact URI in Desktop Login Kit. Save your TikTok Client key and Client secret in the dialog, then choose **Connect TikTok** and authorize the account.
-3. In **Posting calendar**, select **TikTok** on a portrait export you’re authorized to share. Review the video and edit the separate TikTok caption and hashtags. Use **Save caption** to keep your edits and **Copy caption** to paste them into TikTok.
+3. In **Publish**, select **TikTok** on a portrait export you’re authorized to share. Review the video and edit the separate TikTok caption and hashtags. Use **Save caption** to keep your edits and **Copy caption** to paste them into TikTok.
 4. Confirm the upload and choose **Send to TikTok Inbox**. Use **Check TikTok status** to check delivery, then open the Inbox notification to paste the caption and publish in TikTok. YouTube scheduling works independently.
 
 TikTok credentials are stored in the local `.cache/tiktok/` folder. Captions and inbox delivery state live under `work/tiktok/`. TikTok's [inbox upload endpoint](https://developers.tiktok.com/docs/en/content-posting-api-reference-upload-video) transfers the video file. The creator finishes the post and adds the caption inside TikTok.

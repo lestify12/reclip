@@ -2,9 +2,11 @@
 
 <img src="docs/media/logo-dark.png" alt="Reclip" width="420">
 
-Turn a long stream, a podcast or any recording into captioned, edited Shorts (9:16) or regular videos (16:9), on your own computer.
+**Turn long streams, podcasts and videos into captioned, ready-to-post clips, on your own computer.**
 
-Paste a public YouTube, Twitch or Kick link (a past broadcast, a clip, or a YouTube or Twitch stream that is still live) or drop in a video file. Reclip transcribes it locally, finds the best moments, edits each one with the template you choose, and exports ready-to-post MP4s. If you want, it also writes titles with AI and schedules the uploads to your YouTube channel.
+Paste a YouTube, Twitch or Kick link (a past broadcast, a clip, or a stream that is still live) or drop in a video file. Reclip transcribes it locally, finds the best moments, edits each one with the template you pick, writes YouTube-style titles, and schedules the uploads for you. Auto-pilot can even find the hyped streams by itself and keep six clips a day going out to YouTube and TikTok.
+
+Everything runs locally: your footage, transcripts and keys never leave your computer except when you upload a clip.
 
 Reclip is redesigned from [OpenClip](https://github.com/jaspher19/open-clip-editor) by Jaspher Tampos, used under the MIT license.
 
@@ -17,46 +19,45 @@ All three clips were made by Reclip from one 12-minute film, *Tears of Steel* (c
 | [![Skull Ending example](docs/media/preview-skull-ending.gif)](docs/media/example-skull-ending.mp4) | [![Meme Reveal example](docs/media/preview-meme-reveal.gif)](docs/media/example-meme-reveal.mp4) | [![Context Hit example](docs/media/preview-context-hit.gif)](docs/media/example-context-hit.mp4) |
 | Ends on the punchline, then a smear into a held frame with a warm glow, flames, an animated skull and an 808 beat | The frame freezes in silence, then the reveal lands with a flash and a boom; green and red tints on the shouted lines | A hook title, then the setup and the payoff, with word-by-word captions |
 
-### Screenshots
+## A quick tour
+
+### New project
+![New project: drop a video or paste a link, choose the kind of edit, shape and template, and see a live preview on the right](docs/media/new-project.jpg)
+
+Drop a file or paste a link, then pick the **kind of edit** (meme, standard or raw), the **shape** (9:16 or 16:9), how many clips and the caption style. The preview on the right shows what every clip will look like. Fonts, colours, motion, transcription and long-stream options sit in the **Format**, **Output** and **Advanced** tabs.
 
 | | |
 | :---: | :---: |
-| ![Start screen: paste a link or drop a file; your projects listed by creator, with a language menu at the top](docs/media/new-project.jpg) | ![Finished project: Clip again for more clips, and one clip updating on its own while the others stay playable](docs/media/project-clips.jpg) |
-| **New project:** paste a link or drop a file. Your projects are listed by creator, with their photo, and the whole app can switch language from the top bar | **Your clips:** edited and ready. **Clip again** adds more without repeating one, and an edited clip re-renders on its own while you keep working |
-| ![Clip editor: captions translated to Spanish, synced to the speech](docs/media/clip-editor.jpg) | ![Templates: choose a different edit for any clip](docs/media/templates.jpg) |
-| **Clip editor:** trim and cut on words, fix captions, or **translate them** into another language, still synced to the speech | **Style & hook:** switch templates, fonts, colours and motion |
+| ![Template gallery: 18 edit templates with illustrated previews](docs/media/templates.jpg) | ![Caption style: each font shown in its own typeface, with an in-app colour picker](docs/media/caption-style.jpg) |
+| **18 templates.** Browse every edit style with an illustrated preview and pick one in a click. | **Caption style.** Each font is shown in its own typeface; colours use an in-app picker with presets. |
 
-| | |
-| :---: | :---: |
-| ![Posting calendar: each post with its thumbnail, drafts and scheduled days](docs/media/posting-calendar.jpg) | ![Post dialog: a preview of the finished video before you upload](docs/media/post-preview.jpg) |
-| **Posting calendar:** every post shows its thumbnail; edit titles and descriptions, schedule, and upload privately to YouTube | **Ready to post?** see the finished video before it goes up |
+### Publish
+![Publish: counts of drafts, scheduled, uploading and published clips, a day-by-day queue, and add, schedule, auto-post and TikTok controls on the right](docs/media/publish.jpg)
 
-### New: Video cutter, auto captions, TikTok and portrait or landscape
+Line up finished clips, polish their titles and captions, and schedule them. Reclip uploads each one to YouTube a few hours before its release time so you stay under YouTube's daily limit, and can send the same clip to your TikTok inbox when it goes live.
 
-![Video cutter: parts on the timeline, the camera (pink) and gameplay (green) boxed, and the finished Short live with a title and auto captions](docs/media/video-cutter.jpg)
+### Auto-pilot
+![Auto-pilot: a watchlist of Twitch streamers, categories and YouTube channels, rules and release times, hyped candidates and an activity log](docs/media/autopilot.jpg)
 
-**Video cutter:** pick parts on the loudness timeline, box the camera and the gameplay, and see the finished Short live, with your title and auto captions (the word being said lights up).
+Give Auto-pilot a watchlist of Twitch streamers, Twitch categories and YouTube channels. Every few hours it scores their newest streams and videos by views, live viewers and the clips viewers made, sends the most hyped one through the normal clipping pipeline, and schedules the six best clips at your release times. It never clips the same source twice and waits when two days of clips are already queued.
 
-| | |
-| :---: | :---: |
-| ![Preview, layout presets, auto caption styles, text and export quality up to 4K](docs/media/cutter-preview-text.jpg) | ![Post this cut: save a YouTube draft or send it to the TikTok inbox](docs/media/post-tiktok.jpg) |
-| **Layout, captions, text and quality:** presets, Find the camera, auto captions styled like text, 8 fonts, export from 720p to 4K | **Post without downloading:** save a YouTube draft to the calendar, or send a portrait cut to your TikTok inbox |
+### Settings
+![Settings: paste AI keys and source keys in the app; they are saved to .env on this computer](docs/media/settings.jpg)
 
-![New project: choose portrait or landscape, then meme, standard or raw clips](docs/media/new-project-shape.jpg)
-
-**New project:** choose 9:16 or 16:9 first, then a meme edit, standard clips or raw clips (no transcription, no edits).
+Paste your AI keys (Gemini and Groq are free) and the Auto-pilot source keys right in the app. They are saved to the `.env` file in the Reclip folder and apply immediately.
 
 ## What it does
 
-- **Runs locally.** Transcription (Whisper), editing and rendering (FFmpeg) all happen on your machine. No account and no API key are required.
-- **Finds moments for you.** Laughs, hype words, "clip that", loud reactions, busy on-screen action and live chat going wild (Twitch chat, and the chat replay of past YouTube streams) rank every part of the stream. Clips whose payoff comes late open on it for a moment, then play from the setup, so the first seconds hold viewers. Each pick gets the setup it needs before the payoff, and silent action like a chase is kept instead of trimmed as a pause.
-- **18 edit templates**, including facecam layouts for streams (Cam Split, Glow Card), two meme edits (Meme Reveal and Skull Ending) built from frame-by-frame measurements of viral Shorts, and **Raw Clip**: no transcription and no edits, just the loudest and busiest moments cut as they happened.
-- **Portrait or landscape.** Choose 9:16 (Shorts, TikTok, Reels) or 16:9 (YouTube videos) before you start. Every template follows the shape you chose.
-- **Video cutter.** Cut any parts of a video into one MP4: drag across the loudness timeline or mark with I and O, add suggested moments, reorder, box the camera and the gameplay and place them, add text in any of 8 fonts and auto captions, and export in 9:16 or 16:9 (up to 4K) exactly as the live preview shows. Post the result without downloading it.
-- **Optional AI.** A free Gemini or Groq key adds AI titles, descriptions and tags, and lets the AI choose the best moments from the picker's candidates.
-- **Edit everything.** Trim on words, fix captions, cut out the middle, add zooms, freezes, replays, sounds and labels.
-- **Checks every export.** Too quiet, clipping sound, black or frozen picture, or blurry footage get a warning on the clip before you post.
-- **Post it.** A posting calendar with YouTube uploads and scheduling, sending portrait videos to your TikTok inbox, and optional **auto-post**: when a project finishes, the best clips upload right away and the rest are spread over the next days.
+- **Runs locally.** Transcription (Whisper), editing and rendering (FFmpeg) all happen on your machine. No account and no API key are required to make clips.
+- **Finds moments for you.** Laughs, hype words, "clip that", loud reactions, busy on-screen action and live chat going wild rank every part of the stream. Each pick gets the setup it needs before the payoff.
+- **18 edit templates**, including facecam layouts for streams (Cam Split, Glow Card), two meme edits (Meme Reveal and Skull Ending) and **Raw Clip** (no transcription, no edits).
+- **Portrait or landscape.** 9:16 for Shorts, TikTok and Reels, or 16:9 for YouTube videos. Every template follows the shape you choose.
+- **Video cutter.** Cut any parts of a video into one MP4, box the camera and the gameplay, add text in 8 fonts and auto captions, and export up to 4K.
+- **AI titles.** A free Gemini or Groq key writes YouTube-style titles, descriptions and tags, and can help pick the best moments.
+- **Edit everything.** Trim on words, fix or translate captions, cut out the middle, add zooms, freezes, replays, sounds and labels.
+- **Checks every export.** Too quiet, clipping sound, black or frozen picture, or blurry footage get a warning before you post.
+- **Publish.** A day-by-day queue with YouTube scheduling, daily auto-uploads, optional auto-post of finished projects, and TikTok inbox sending at release time.
+- **Auto-pilot.** Watches streamers and channels, clips the most hyped stream, and schedules six clips a day.
 - **Learns from your channel.** Once you have a few uploads, Reclip reads their view counts and favours the kinds of moments your channel does best with.
 
 ---
@@ -254,7 +255,7 @@ Templates are starting points. Every setting can be changed per clip, and **Appl
 
 ## Video cutter
 
-Open **Video cutter** in the sidebar (or **Cut video** on a project) to cut any parts of a project's video into one MP4 and give it your own look: framing, a camera + gameplay layout, text and auto captions.
+Open **Video cutter** in the top bar (or **Cut video** on a project) to cut any parts of a project's video into one MP4 and give it your own look: framing, a camera + gameplay layout, text and auto captions.
 
 - **Add parts** by dragging across the timeline, by pressing **I** at the start and **O** at the end while the video plays, or by adding a suggested moment. Taller bars on the timeline are louder.
 - **Adjust** each part's start and end, play it, reorder the parts or sort them by time. **Watch the whole cut** plays them back to back.
@@ -262,7 +263,7 @@ Open **Video cutter** in the sidebar (or **Cut video** on a project) to cut any 
 - **Camera + gameplay:** a pink box (camera) and a green box (gameplay) sit on the video. Drag them over the streamer's camera and the game, and drag a corner to resize. In the preview, drag and resize each panel to place it: camera on top, gameplay on top, camera in a corner, side by side, or anywhere you like. **Find the camera here** looks for the camera around the playhead. Each box keeps the shape of its panel, so what you box is exactly what shows.
 - **Text:** add captions, titles or an @handle, choose a font (Anton, Montserrat, Barlow Condensed, Work Sans, Luckiest Guy, Bangers, Comic Neue), size, colour and outline or box, and drag it into place on the preview. The export uses the same drawing as the preview, so it matches exactly.
 - **Auto captions:** press **Add auto captions** and the spoken words appear in sync, with the word being said highlighted. Reclip transcribes only your parts, on your computer, including raw projects and long streams it hadn't fully transcribed. Style them like text (font, size, colours, outline, box or shadow, words at a time, presets) and drag them into place. Fix any word under **Fix a word**.
-- **Post** a finished cut straight to the Posting calendar as a private draft, then schedule or upload it to YouTube there. Downloading is optional.
+- **Post** a finished cut straight to **Publish** as a private draft, then schedule or upload it to YouTube there. Downloading is optional.
 - **Export** the cut with that look. Cuts render in the background; download them, delete them, or **Edit again** to bring back the parts, layout, text and captions.
 
 - **Quality:** export in 720p, 1080p Full HD, 1440p 2K or 2160p 4K. For long streams, 2K and 4K fetch the sharpest footage the platform serves for each part (Twitch can serve 1440p; YouTube serves stream parts in 1080p). When the source is less sharp than the export, the cut is scaled up and says so.
@@ -271,11 +272,7 @@ Long streams are imported as a light 360p copy. The cutter downloads full qualit
 
 ## Optional: AI titles and smarter picks
 
-Copy the example settings file and add **one** key (free options are listed first):
-
-```powershell
-copy .env.example .env      # macOS/Linux: cp .env.example .env
-```
+Open **Settings → AI providers** in Reclip and paste **one** key (free options are listed first), then click **Save**. Keys are written to the `.env` file in the Reclip folder; you can also edit that file by hand. These are the settings it holds:
 
 | Setting in `.env` | What it does | Cost |
 | --- | --- | --- |
@@ -288,7 +285,7 @@ copy .env.example .env      # macOS/Linux: cp .env.example .env
 | `METADATA_AI` | Leave blank to use the first one set up (Gemini, Groq, Ollama, then Claude), or force `gemini`, `groq`, `ollama` or `claude` | |
 | `YOUTUBE_REGION` | Two-letter country for the trending chart used as title-style context | |
 
-Reclip picks up changes to `.env` by itself, no restart needed, and the home page shows which keys it found (or what is wrong with the file). AI features send transcript text to the provider you chose. Your keys stay in `.env` on your computer, and `.env` is never committed. Always review AI titles for names and facts before posting.
+Reclip picks up changes to `.env` by itself, no restart needed, and the New project page shows whether AI is on and with which provider (Settings shows what is wrong with the file, if anything). AI features send transcript text to the provider you chose. Your keys stay in `.env` on your computer, and `.env` is never committed. Always review AI titles for names and facts before posting.
 
 ## Optional: campaign requirements (Whop and similar)
 
@@ -303,6 +300,17 @@ Reclip has the AI read the brief once into rules, then:
 
 The project page shows the rules it used. The brief is pasted text (Whop pages need a login, so Reclip doesn't read them), and the AI treats it only as clip requirements. Always check each clip against the campaign before you submit it.
 
+## Optional: Auto-pilot
+
+**Auto-pilot** (top bar) watches streamers and channels for you and keeps clips going out every day:
+
+1. In **Settings → Sources**, add a free Twitch app (client id and secret, from [dev.twitch.tv](https://dev.twitch.tv/console/apps)) and/or a free **YouTube Data API key**. Make the YouTube key in a separate Google Cloud project, so its quota never competes with your uploads.
+2. In **Auto-pilot → Watchlist**, list Twitch streamers, Twitch categories and YouTube channels.
+3. Set the rules: how often to check, how far back to look, the minimum hype, the template, and up to six daily release times (Manila time).
+4. Press **Scout now** to see what it would pick, then **Turn on**.
+
+Every run scores recent streams and videos by views, live viewers and the clips viewers made, sends the most hyped fresh one through the normal clipping pipeline, and when it finishes schedules its best clips in **Publish**. A source is never clipped twice, and Auto-pilot waits while two days of clips are already queued. YouTube's free quota covers about six uploads a day, and new Google Cloud projects upload as private until YouTube audits them. Only clip streams and videos you have permission to use.
+
 ## Optional: posting to YouTube
 
 **📘 Step-by-step guide with fixes for every common error: [docs/YOUTUBE-SETUP.md](docs/YOUTUBE-SETUP.md).** The same guide is inside Reclip under **Automation → YouTube setup**. The short version:
@@ -311,19 +319,21 @@ The project page shows the rules it used. The brief is pasted text (Whop pages n
 2. Open [Google's Personal setup page](https://console.cloud.google.com/auth/overview/personal). Keep the suggested project, choose Application type **Desktop app**, agree, click **Continue**, then click **Download JSON** before closing the window (Google shows the secret only once).
 3. In the same project, enable [YouTube Data API v3](https://console.cloud.google.com/apis/library/youtube.googleapis.com).
 4. In **Automation → YouTube setup**, choose the JSON file and click **Save credentials**. Then click **Connect YouTube**, sign in with the same account and tick every box.
-5. Open **Posting calendar**, add edited clips (or any finished MP4), edit the title, description and tags, and save drafts.
-6. Select drafts and press **Upload selected**. Uploads are **private by default**. A scheduled post uploads now and YouTube publishes it at the time you set. New Google Cloud projects may be limited to private uploads until Google audits them.
-7. Optional: in **Posting calendar → Auto-post**, turn on auto-posting. When a project finishes, its best clean clips (kept, exported, no warnings) upload as public right away (2 by default) and up to 9 more are scheduled at your daily release times, using titles built from the on-screen hook with an emoji and hashtags. Each project auto-posts once, and nothing already uploaded is uploaded again. YouTube allows about 6 uploads a day by default, so keep the numbers near that.
+5. Open **Publish**, add edited clips (or any finished MP4), edit the title, description and tags, and save drafts.
+6. Tick drafts and press **Upload**, or use **Schedule selected** to spread them over the days. Uploads are **private by default**. A scheduled post uploads now and YouTube publishes it at the time you set. New Google Cloud projects may be limited to private uploads until Google audits them.
+7. Optional: in **Publish → Auto-post**, turn on auto-posting. When a project finishes, its best clean clips (kept, exported, no warnings) upload as public right away (2 by default) and up to 9 more are scheduled at your daily release times, using titles built from the on-screen hook with an emoji and hashtags. Each project auto-posts once, and nothing already uploaded is uploaded again. YouTube allows about 6 uploads a day by default, so keep the numbers near that.
 
 **Learning from your channel.** With YouTube connected, Reclip reads the view counts of the clips it uploaded (twice a day; turn it off with `LESSONS_AUTO=0` in `.env`). After four or more uploads that are at least three days old, the picker favours the kinds of moments that did better on your channel, and says so on the clip (for example "Your channel: loud reactions get 40% more views").
 
-**Automatic thumbnails.** When you add a regular (horizontal) video to the posting calendar, Reclip makes a 1280×720 thumbnail from the clip's project: the streamer's biggest reaction cut out with a white outline over a bright gameplay frame, two to four big words from the clip title (or your own), the game name, and an optional LIVE badge. Change the words or make it again from the post's thumbnail panel. YouTube does not let apps set a Shorts thumbnail, so for Shorts the panel makes an image to download and set in the YouTube app. The official game logo is never used; the game name is drawn in Reclip's own lettering. Run `npm run setup:faces` once to download the face models.
+**Automatic thumbnails.** When you add a regular (horizontal) video to Publish, Reclip makes a 1280×720 thumbnail from the clip's project: the streamer's biggest reaction cut out with a white outline over a bright gameplay frame, two to four big words from the clip title (or your own), the game name, and an optional LIVE badge. Change the words or make it again from the post's thumbnail panel. YouTube does not let apps set a Shorts thumbnail, so for Shorts the panel makes an image to download and set in the YouTube app. The official game logo is never used; the game name is drawn in Reclip's own lettering. Run `npm run setup:faces` once to download the face models.
 
 An upload log stops the same file from being uploaded twice, unless you choose **Upload anyway**. Scheduled times currently use UTC+8. See [docs/AUTOMATION.md](docs/AUTOMATION.md) for live-stream capture, repeatable automation scripts and their limits.
 
 ## Optional: posting to TikTok
 
-Reclip can send portrait exports to your **TikTok inbox**; you then open the TikTok app, add the caption and publish. Set it up once in **Automation → TikTok setup** with your own TikTok for Developers app, then pick **TikTok** on a post in the **Posting calendar**. The full steps and limits are in [docs/AUTOMATION.md](docs/AUTOMATION.md#connect-tiktok-for-inbox-uploads).
+Reclip can send portrait exports to your **TikTok inbox**: the video arrives as a draft with its caption, and you tap Post in the TikTok app. TikTok's API doesn't let apps schedule or publish publicly on their own, so that tap stays yours. Set it up once in **Automation → TikTok setup** with your own TikTok for Developers app. Then either pick **TikTok** on a post in **Publish**, or turn on **TikTok at release time** (in Publish or Auto-pilot) so every scheduled portrait clip goes to your inbox the moment it goes live on YouTube.
+
+**TikTok login says "client_key".** Your app isn't approved for production yet. Use its **Sandbox**: in TikTok for Developers, switch the app to Sandbox, add Login Kit and the Content Posting API there, register the redirect URI that Reclip's TikTok setup shows, add your TikTok account under **Target users**, and save the **Sandbox** client key and secret in Reclip. The full steps and limits are in [docs/AUTOMATION.md](docs/AUTOMATION.md#connect-tiktok-for-inbox-uploads).
 
 ## Updating Reclip
 
@@ -336,7 +346,7 @@ npm run setup
 npm run build
 ```
 
-Start it again with `npm start`. Your projects, settings (`.env`) and posting calendar are kept. If `git pull` complains about local changes, run `git stash` first.
+Start it again with `npm start`. Your projects, settings (`.env`) and Publish queue are kept. If `git pull` complains about local changes, run `git stash` first.
 
 ## Command line
 
@@ -350,7 +360,7 @@ npm run setup:references                                             # optional:
 
 - **"node", "python", "ffmpeg" or "git" is not recognized.** Close the terminal and open a new one after installing. If it still fails, the program's folder isn't on your `PATH`: reinstall it, and for Python tick *Add python.exe to PATH*. On Windows, `python` can also open the Microsoft Store instead. Turn that off under *Settings > Apps > Advanced app settings > App execution aliases*.
 - **Every job fails during transcription (often on a Mac).** The project's Python environment was made with a Python older than 3.11. macOS comes with Python 3.9. Run `npm run setup` again: it finds Python 3.11–3.13 (or uses uv) and rebuilds the environment. If it says no such Python was found, run `brew install uv` and run setup again.
-- **My API key isn't picked up.** The home page says which keys Reclip found and what is wrong with the settings file. The usual causes: the key line still starts with `#`; the file is really named `.env.txt` (Windows hides extensions, so turn on *View > File name extensions*); or the key is not right after the `=` (for example `GEMINI_API_KEY=AIza...`). Reclip reads `.env` from its own folder, including files PowerShell saved as UTF-16, and picks up changes by itself. `npm run build` and `npm run setup` are not needed for a new key.
+- **My API key isn't picked up.** **Settings** shows each key as saved or not set, and what is wrong with the settings file. The usual causes: the key line still starts with `#`; the file is really named `.env.txt` (Windows hides extensions, so turn on *View > File name extensions*); or the key is not right after the `=` (for example `GEMINI_API_KEY=AIza...`). Reclip reads `.env` from its own folder, including files PowerShell saved as UTF-16, and picks up changes by itself. `npm run build` and `npm run setup` are not needed for a new key.
 - **Transcription crashes on Windows ("Windows error 0xC0000005", or `python.exe failed (3221225477)`).** The speech engine needs a current Microsoft Visual C++ Runtime, and an older one makes it crash as the model loads. Install the latest from <https://aka.ms/vs/17/release/vc_redist.x64.exe>, restart the computer, then press **Retry job**. `npm run setup` checks the runtime version and warns when it is too old.
 - **Setup fails installing faster-whisper.** Your Python is probably too new (3.14 or later). Install Python 3.12, or install uv, then delete the `.venv` folder and run `npm run setup` again.
 - **"Edit didn't render" with "Unrecognized option 'filter_complex_script'".** Your FFmpeg is newer than your copy of Reclip expects. Update Reclip (see *Updating Reclip*), then press **Retry** on the clips.
@@ -358,10 +368,10 @@ npm run setup:references                                             # optional:
 - **A YouTube, Twitch or Kick link fails.** These sites change often. Run `npm run setup` to update yt-dlp, or download the video and drop the file in instead. Private, members-only, subscriber-only and DRM videos aren't supported. For a Kick stream, wait until it has ended.
 - **A clip has a "Blurry" warning.** For long or live streams each clip is rendered from a 1080p download of its part. If the platform only offered a low quality, or that download failed, the clip is made from the light copy and marked. Render it again later to retry; auto-post skips these clips.
 - **Twitch live chat.** When you import a Twitch channel that is live, Reclip reads its public chat (anonymously, text only, no usernames) and uses chat spikes to find moments when you paste the link again later.
-- **Twitch: favour what viewers clipped.** Add your own free Twitch app's `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` to `.env` (see `.env.example`). For Twitch VODs, Reclip then reads the clips viewers made of the broadcast and ranks those moments higher; each such clip says "Viewers clipped this" with the view count.
+- **Twitch: favour what viewers clipped.** Add your own free Twitch app's client id and secret in **Settings → Sources**. For Twitch VODs, Reclip then reads the clips viewers made of the broadcast and ranks those moments higher; each such clip says "Viewers clipped this" with the view count.
 - **Face follow falls back to center.** Run `npm run setup:faces`. Dark scenes, side profiles and fast motion can still fall back to center.
 - **Port 5173 is in use.** Set `PORT=5180` (or another free port) in `.env`.
-- **Disk space.** Each project lives in `work/<project id>/`. Delete old projects with the trash icon next to them in the sidebar; it removes their files too.
+- **Disk space.** Each project lives in `work/<project id>/`. Delete old projects with the trash icon in the **Projects** menu in the top bar; it removes their files too.
 - **Picks need review.** Automatic picks and Whisper text are suggestions; this isn't a views predictor. Only edit footage and music you have permission to use.
 
 ## Development
