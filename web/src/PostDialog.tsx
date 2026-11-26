@@ -50,7 +50,7 @@ export default function PostDialog({job,clip,onClose,onReexport,onConnect}:{job:
     <button type="button" aria-pressed={destination==='youtube'} disabled={busy||preparingTikTok} onClick={()=>{setDestination('youtube');if(pub)setError('');}}><MonitorPlay size={17}/>YouTube</button>
     <button type="button" aria-pressed={destination==='tiktok'} disabled={busy||preparingTikTok} onClick={()=>{setDestination('tiktok');if(pub)setError('');}}><Smartphone size={17}/>TikTok</button>
    </div>}
-   {pub?.exported&&!post&&<PostPreview job={job} clipId={clip.id} portrait={portrait} note={destination==='tiktok'?'TikTok lets you pick the cover in its app before you publish.':postAs==='video'?'After you save, Reclip makes an automatic thumbnail from the streamer’s biggest reaction. Change it in the Posting calendar (Edit).':'YouTube lets you choose a Short’s thumbnail only in its mobile app, after the upload. This is the frame it starts on.'}/>}
+   {pub?.exported&&!post&&<PostPreview job={job} clipId={clip.id} portrait={portrait} note={destination==='tiktok'?'TikTok lets you pick the cover in its app before you publish.':postAs==='video'?'After you save, Reclip makes an automatic thumbnail from the streamer’s biggest reaction. Change it in Publish (Edit).':'YouTube lets you choose a Short’s thumbnail only in its mobile app, after the upload. This is the frame it starts on.'}/>}
    {!pub&&!error&&<p className="loading-words"><Loader2 className="spin" size={16}/>Writing the title and description…</p>}
    {pub&&destination==='tiktok'&&<div className="post-destination-details">
     <p>TikTok receives the finished portrait video in your Inbox, where you can review and publish it.</p>
@@ -60,7 +60,7 @@ export default function PostDialog({job,clip,onClose,onReexport,onConnect}:{job:
    {pub&&!post&&destination==='youtube'&&<form id="post-form" onSubmit={e=>{e.preventDefault();submit(true);}}>
     <div className="format-choice" role="radiogroup" aria-label="Post as"><button type="button" role="radio" aria-checked={postAs==='video'} className={postAs==='video'?'chosen':''} onClick={()=>setPostAs('video')}><MonitorPlay size={20}/><strong>Main video</strong><small>16:9 on your channel's Videos tab</small></button><button type="button" role="radio" aria-checked={postAs==='shorts'} className={postAs==='shorts'?'chosen':''} onClick={()=>setPostAs('shorts')}><Smartphone size={20}/><strong>Shorts</strong><small>Vertical, up to 3 minutes</small></button></div>
     {mismatch&&onReexport&&<button type="button" className="secondary" onClick={()=>{onReexport(postAs);close();}}><RefreshCw size={15}/>Re-export as {postAs==='video'?'a main video (1920 × 1080)':'a Short (1080 × 1920)'}</button>}
-    {!pub.connected&&<p className="setup-warning">YouTube isn't connected. Save a draft now and upload it from the Posting calendar later, or connect in Automation.</p>}
+    {!pub.connected&&<p className="setup-warning">YouTube isn't connected. Save a draft now and upload it from Publish later, or connect in Automation.</p>}
     <div className="ai-row"><button type="button" className="secondary" disabled={writing||!pub.ai} onClick={writeWithAi}>{writing?<Loader2 className="spin" size={15}/>:<Sparkles size={15}/>}{writing?'Writing…':ai?'Write again':'Write with AI'}</button>{!pub.ai&&<small>Add a free <code>GEMINI_API_KEY</code> (aistudio.google.com/app/apikey) to your <code>.env</code> file, then restart, to let AI write hooks, hashtags and tags.</small>}{ai&&<small className="ai-note">{ai.rationale}{ai.trendingUsed>0?` · Matched to ${ai.trendingUsed} trending videos.`:''} Check it's accurate before posting.</small>}</div>
     <TitleOptions options={clip.titleOptions||[]} current={title} onPick={setTitle}/><label><span className="field-label">Title <small>{title.length}/100</small></span><input value={title} maxLength={100} onChange={e=>setTitle(e.target.value)} required/></label>
     <label><span className="field-label">Description</span><textarea rows={6} value={description} onChange={e=>setDescription(e.target.value)}/></label>
@@ -76,7 +76,7 @@ export default function PostDialog({job,clip,onClose,onReexport,onConnect}:{job:
    </form>}
    {post&&<div className="post-result" role="status">
     {uploading&&<p className="loading-words"><Loader2 className="spin" size={16}/>Uploading to YouTube… you can close this; it keeps going.</p>}
-    {post.state==='draft'&&<p>Saved as a draft in the <strong>Posting calendar</strong>.</p>}
+    {post.state==='draft'&&<p>Saved as a draft in the <strong>Publish</strong>.</p>}
     {finished&&!post.error&&<p><strong>{post.state==='scheduled'?'Scheduled!':'Posted!'}</strong> YouTube has your video.</p>}
     {post.error&&<p className="trim-warning">{post.error}</p>}
     {post.url&&<a className="secondary" href={post.url} target="_blank" rel="noreferrer"><ExternalLink size={15}/>Open on YouTube</a>}

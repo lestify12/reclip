@@ -5,7 +5,7 @@ import {ROOT,PYTHON} from './config.mjs';import {publicJob} from './jobs.mjs';im
 import {EDIT_TEMPLATES,CAPTION_FONTS,applyTemplate} from './templates.mjs';import {CAPTION_STYLES} from './captions.mjs';import {run} from './process.mjs';import {randomUUID} from 'node:crypto';
 import {PostingQueue} from './posting.mjs';import {UploadLog,guardUploads} from './upload-log.mjs';import {SUMMARY_FORMATS} from './summary.mjs';import {writeMetadataAI,metadataProvider} from './metadata-ai.mjs';import {streamPeople,clipPeople} from './people.mjs';import {probe} from './process.mjs';
 import {ReferenceLibrary} from './references.mjs';
-import {validateClipEdits} from './clip-edits.mjs';import {clipTraits,refreshLessons,loadLessons} from './learning.mjs';import {autoPostJob,loadAutopost,saveAutopost} from './autopost.mjs';import {playedLength} from './edl.mjs';import {PLAY_MAX,SPAN_MAX,momentShape} from './selection.mjs';import {jobTimeline,bestUnused,unusedMoments} from './timeline.mjs';import {MusicLibrary} from './music.mjs';import {titleClips} from './titles.mjs';import {cueSums,loudness,categoryScores} from './moments.mjs';
+import {validateClipEdits} from './clip-edits.mjs';import {clipTraits,refreshLessons,loadLessons} from './learning.mjs';import {autoPostJob,loadAutopost,saveAutopost} from './autopost.mjs';import {AutopilotEngine,readAutopilot,loadAutopilot,saveAutopilot,sourcesReady} from './autopilot.mjs';import {playedLength} from './edl.mjs';import {PLAY_MAX,SPAN_MAX,momentShape} from './selection.mjs';import {jobTimeline,bestUnused,unusedMoments} from './timeline.mjs';import {MusicLibrary} from './music.mjs';import {titleClips} from './titles.mjs';import {cueSums,loudness,categoryScores} from './moments.mjs';
 // Sound and publishing routes live in their own modules.
 import {registerSoundRoutes} from './sounds.mjs';import {registerCreatorRoutes} from './creators.mjs';import {registerPublishRoutes} from './publish-routes.mjs';
 import {TikTokClient,TikTokDrafts,registerTikTokRoutes,tiktokVideoError} from './tiktok.mjs';
@@ -39,7 +39,9 @@ export function createApp({store,queue,youtube:client=new YouTubeClient(),tiktok
  app.locals.learn=learn;
  // Auto-post (off by default): a finished project's best clips go to the calendar, the top ones upload right away.
  const autoPost=async id=>{const job=store.get(id);if(job.status!=='complete')return null;try{return await autoPostJob(job,{store,posting,youtube,settings:loadAutopost(store.root)});}catch(e){store.update(id,{autoPosted:{error:e.message,at:new Date().toISOString()}});return null;}};
- if(queue)queue.onPipelineDone=autoPost;app.locals.autoPost=autoPost;app.disable('x-powered-by');
+ // Auto-pilot (off by default): finds hyped streams on a watchlist and schedules the best clips of its own projects.
+ const autopilot=new AutopilotEngine({store,queue,posting,youtube});app.locals.autopilot=autopilot;if(process.env.AUTOPILOT_AUTO!=='0')autopilot.start();
+ if(queue)queue.onPipelineDone=async id=>{let job;try{job=store.get(id);}catch{return null;}return job.autopilot?autopilot.onDone(id):autoPost(id);};app.locals.autoPost=autoPost;app.disable('x-powered-by');
  app.use((req,res,next)=>{const allowed=['localhost','127.0.0.1','[::1]','::1'];if(!allowed.includes(req.hostname))return res.status(403).json({error:'Use this app through localhost'});if(!['GET','HEAD','OPTIONS'].includes(req.method)&&req.headers.origin){try{const origin=new URL(req.headers.origin);if(!allowed.includes(origin.hostname)||!['5173','5174',String(req.socket.localPort)].includes(origin.port))return res.status(403).json({error:'Cross-origin changes are blocked'});}catch{return res.status(403).json({error:'Invalid request origin'});}}next();});
  // 8 MB: the Video cutter's text layer arrives as a PNG data URL (usually well under 1 MB).
  // A key added to .env applies on the next request, no restart needed (one file stat per request).
@@ -73,6 +75,12 @@ export function createApp({store,queue,youtube:client=new YouTubeClient(),tiktok
  app.get('/api/templates/:id/reference/:kind',(req,res)=>{if(!['video','poster'].includes(req.params.kind))throw fail('Invalid reference file kind');const info=references.info(req.params.id);if(!info?.available)throw fail('Load this original reference first',404);res.set('Cache-Control','private, max-age=3600');res.sendFile(references.file(req.params.id,req.params.kind),{dotfiles:'allow'});});
  app.get('/api/update',async(req,res)=>res.json(await checkUpdates()));
  app.get('/api/youtube/status',(req,res)=>res.json(youtube.status()));
+ const autopilotData=()=>{const d=readAutopilot(store.root);return {config:d.config,status:autopilot.status(),ready:sourcesReady(),log:d.log.slice(0,50),used:d.used.slice(0,50)};};
+ app.get('/api/autopilot',(req,res)=>res.json(autopilotData()));
+ app.post('/api/autopilot',(req,res)=>{try{saveAutopilot(store.root,req.body||{});}catch(e){throw fail(e.message);}autopilot.start();res.json(autopilotData());});
+ app.post('/api/autopilot/scout',async(req,res)=>{try{res.json(await autopilot.tick({dryRun:true}));}catch(e){throw fail(e.message);}});
+ app.post('/api/autopilot/run',async(req,res)=>{try{res.json(await autopilot.tick());}catch(e){throw fail(e.message);}});
+ app.post('/api/autopilot/clip',(req,res)=>{try{res.json({job:publicJob(autopilot.clipUrl(String(req.body?.url||'')))});}catch(e){throw fail(e.message);}});
  app.get('/api/autopost',(req,res)=>res.json({...loadAutopost(store.root),connected:client.status().connected}));
  app.put('/api/autopost',(req,res)=>{let s;try{s=saveAutopost(store.root,req.body||{});}catch(e){throw fail(e.message);}if(s.enabled&&!client.status().connected)return res.status(409).json({...s,error:'Saved. Connect YouTube in Automation so the clips can upload.'});res.json(s);});
  app.post('/api/jobs/:id/autopost',async(req,res)=>{const job=get(req);if(job.status!=='complete')throw fail('Wait until the project finishes editing');const settings={...loadAutopost(store.root),enabled:true};if(job.autoPosted&&!job.autoPosted.error)throw fail('This project was already auto-posted');store.update(job.id,{autoPosted:null});const r=await autoPostJob(store.get(job.id),{store,posting,youtube,settings});res.json(r);});

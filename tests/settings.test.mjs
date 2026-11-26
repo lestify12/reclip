@@ -32,13 +32,13 @@ test('settings: with neither file, .env is created from nothing',()=>withEnv(nul
  writeSettings({GROQ_API_KEY:'gsk_1'},{root,env:{}});assert.equal(read(),'GROQ_API_KEY=gsk_1\n');
 }));
 test('settings: unknown keys, non-text and line breaks are refused before anything is written',()=>withEnv('PORT=5173\n',(root,read)=>{
- assert.throws(()=>writeSettings({TWITCH_CLIENT_SECRET:'x'},{root,env:{}}),/Unknown setting: TWITCH_CLIENT_SECRET/);
+ assert.throws(()=>writeSettings({CLIP_PYTHON:'x'},{root,env:{}}),/Unknown setting: CLIP_PYTHON/);
  assert.throws(()=>writeSettings({GEMINI_API_KEY:'abc\nPORT=1'},{root,env:{}}),/line breaks/);
  assert.throws(()=>writeSettings({GEMINI_API_KEY:5},{root,env:{}}),/must be text/);
  assert.throws(()=>writeSettings(['GEMINI_API_KEY'],{root,env:{}}),/object/);
  assert.throws(()=>writeSettings({YOUTUBE_REGION:'USA'},{root,env:{}}),/two-letter/);
  assert.throws(()=>writeSettings({METADATA_AI:'openai'},{root,env:{}}),/METADATA_AI/);
- assert.equal(read(),'PORT=5173\n');assert.equal(SETTINGS_FIELDS.length,13);
+ assert.equal(read(),'PORT=5173\n');assert.equal(SETTINGS_FIELDS.length,16);
 }));
 test('settings: a secret is never returned in full, only its last 4 characters',()=>withEnv('ANTHROPIC_API_KEY=sk-ant-api03-verysecretvalue-7777\nOPENAI_API_KEY=ab\n',(root)=>{
  const s=readSettings({root,env:{}}),json=JSON.stringify(s);

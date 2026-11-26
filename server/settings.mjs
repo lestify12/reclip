@@ -4,8 +4,8 @@
 import fs from 'node:fs';import path from 'node:path';import dotenv from 'dotenv';
 import {ROOT} from './config.mjs';import {loadEnv,decodeEnv} from './env.mjs';
 
-export const SECRET_FIELDS=['GEMINI_API_KEY','GROQ_API_KEY','ANTHROPIC_API_KEY','OPENAI_API_KEY','OLLAMA_API_KEY'];
-export const VALUE_FIELDS=['GEMINI_MODEL','GROQ_MODEL','ANTHROPIC_MODEL','OPENAI_MODEL','OLLAMA_MODEL','OLLAMA_HOST','METADATA_AI','YOUTUBE_REGION'];
+export const SECRET_FIELDS=['GEMINI_API_KEY','GROQ_API_KEY','ANTHROPIC_API_KEY','OPENAI_API_KEY','OLLAMA_API_KEY','YOUTUBE_API_KEY','TWITCH_CLIENT_SECRET'];
+export const VALUE_FIELDS=['GEMINI_MODEL','GROQ_MODEL','ANTHROPIC_MODEL','OPENAI_MODEL','OLLAMA_MODEL','OLLAMA_HOST','METADATA_AI','YOUTUBE_REGION','TWITCH_CLIENT_ID'];
 export const SETTINGS_FIELDS=[...SECRET_FIELDS,...VALUE_FIELDS];
 
 const readText=file=>{try{return decodeEnv(fs.readFileSync(file)).text;}catch{return '';}};

@@ -215,9 +215,9 @@ function CutterFor({job,jobs,onPick,onChanged,onOpenCalendar,onConnectPosting}:{
  async function exportCut(){setSending(true);setError('');try{const overlay=await textLayer(texts,exportSize.width,exportSize.height);
   await call<Cut>(`/api/jobs/${job.id}/cuts`,{method:'POST',body:JSON.stringify({segments:segs,format,quality,framing,title,layout:split?layout:undefined,overlay:overlay||undefined,texts,captions:captions.on?{...captions.look,edits:captions.edits}:undefined})});onChanged(await call<Job>(`/api/jobs/${job.id}`));}
   catch(e){setError((e as Error).message);}finally{setSending(false);}}
- // Post: the cut goes to the Posting calendar as a private draft (title, schedule and upload are set there).
+ // Post: the cut goes to Publish as a private draft (title, schedule and upload are set there).
  async function postCut(c:Cut){setPosting(c.id);try{const r=await call<{existing?:string}>('/api/posting/export',{method:'POST',body:JSON.stringify({jobId:job.id,clipId:`cut:${c.id}`,timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,settings:{privacy:'private',madeForKids:false}})});
-  setPosted(p=>({...p,[c.id]:r.existing==='posted'?'This cut is already posted.':r.existing?'This cut is already in your Posting calendar.':'Added to your Posting calendar as a private draft. Set the title and time there, then upload.'}));}
+  setPosted(p=>({...p,[c.id]:r.existing==='posted'?'This cut is already posted.':r.existing?'This cut is already in Publish.':'Added to Publish as a private draft. Set the title and time there, then upload.'}));}
   catch(e){setPosted(p=>({...p,[c.id]:`Couldn’t add it: ${(e as Error).message}`}));}finally{setPosting(null);}}
  async function cancelCut(c:Cut){try{await call(`/api/jobs/${job.id}/cuts/${c.id}/cancel`,{method:'POST'});}catch(e){setError((e as Error).message);}}
  async function removeCut(c:Cut){try{onChanged(await call<Job>(`/api/jobs/${job.id}/cuts/${c.id}`,{method:'DELETE'}));}catch(e){setError((e as Error).message);}}
@@ -354,13 +354,13 @@ function CutterFor({job,jobs,onPick,onChanged,onOpenCalendar,onConnectPosting}:{
     {c.status==='failed'&&<p className="trim-warning">{c.error||'The cut failed.'}</p>}
     {c.status==='done'&&!!c.sourceSide&&(c.quality||1080)>c.sourceSide+8&&<p className="cutter-note">Scaled up: this part of the stream was only {c.sourceSide}p.</p>}
     {c.preview&&<p className="cutter-note">Some parts came from the light copy (lower quality) because the full-quality download failed{c.previewReason?`: ${c.previewReason}`:''}. Export again to retry.</p>}
-    {posted[c.id]&&<p className="cutter-note" role="status">{posted[c.id]} <button type="button" className="text-button" onClick={onOpenCalendar}><CalendarPlus size={14}/>Open Posting calendar</button></p>}
+    {posted[c.id]&&<p className="cutter-note" role="status">{posted[c.id]} <button type="button" className="text-button" onClick={onOpenCalendar}><CalendarPlus size={14}/>Open Publish</button></p>}
     <span className="cut-item-actions">{c.status==='done'&&<button type="button" className="primary" disabled={posting===c.id||locked} aria-haspopup="dialog" onClick={()=>setPostChoice(c)}>{posting===c.id?<Loader2 className="spin" size={15}/>:<Upload size={15}/>}Post</button>}{c.status==='done'&&<a className="secondary" href={`/api/jobs/${job.id}/cuts/${c.id}?download=1`}><Download size={15}/>Download</a>}{c.status!=='rendering'&&<><button type="button" className="text-button" onClick={()=>loadCut(c)}>Edit again</button><button type="button" className="text-button danger-text" onClick={()=>removeCut(c)}><Trash2 size={14}/>Delete</button></>}</span></div></li>)}</ul></section>}
  {postChoice&&<dialog ref={postPicker} className="editor-dialog post-dialog cut-post-dialog" aria-labelledby="cut-post-title"
   onClose={e=>{if(e.target===e.currentTarget)setPostChoice(null);}} onCancel={e=>{if(e.target===e.currentTarget&&preparingTikTok)e.preventDefault();}}>
   <header className="editor-header"><div><span>{postChoice.title}</span><h2 id="cut-post-title">Post this cut</h2></div><button type="button" className="icon-button" aria-label="Close" disabled={preparingTikTok} onClick={()=>postPicker.current?.close()}><X size={18}/></button></header>
   <div className="post-body post-destination-details">
-   <div><p>Save a YouTube draft to the Posting calendar to edit its details or schedule it.</p>
+   <div><p>Save a YouTube draft to Publish to edit its details or schedule it.</p>
     <button type="button" className="secondary" disabled={preparingTikTok} onClick={()=>{postPicker.current?.close();void postCut(postChoice);}}><CalendarPlus size={16}/>Save YouTube draft</button></div>
    <div><p>{postChoice.format==='shorts'?'Send this portrait cut to TikTok Inbox for review.':'Export a portrait cut to send it to TikTok.'}</p>
     <TikTokExport jobId={job.id} clipId={`cut:${postChoice.id}`} onConnect={onConnectPosting} disabled={postChoice.format!=='shorts'} onPreparing={setPreparingTikTok}/></div>

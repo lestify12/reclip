@@ -7,14 +7,14 @@ import fs from 'node:fs';import path from 'node:path';import {writeJsonAtomic} f
 const HELIX='https://api.twitch.tv/helix',MAX_PAGES=10;
 let cached=null;
 export const crowdReady=(env=process.env)=>!!(env.TWITCH_CLIENT_ID&&env.TWITCH_CLIENT_SECRET);
-async function appToken({env=process.env,fetchImpl=fetch}={}){
+export async function appToken({env=process.env,fetchImpl=fetch}={}){
  if(cached&&cached.id===env.TWITCH_CLIENT_ID&&cached.expires>Date.now()+60_000)return cached.token;
  const body=new URLSearchParams({client_id:env.TWITCH_CLIENT_ID,client_secret:env.TWITCH_CLIENT_SECRET,grant_type:'client_credentials'});
  const r=await fetchImpl('https://id.twitch.tv/oauth2/token',{method:'POST',body,signal:AbortSignal.timeout(20000)});
  if(!r.ok)throw new Error(r.status===400||r.status===403?'Twitch rejected TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET':`Twitch sign-in failed (${r.status})`);
  const data=await r.json();cached={id:env.TWITCH_CLIENT_ID,token:data.access_token,expires:Date.now()+Number(data.expires_in||3600)*1000};return cached.token;
 }
-async function helix(route,params,{env,fetchImpl}){
+export async function helix(route,params,{env,fetchImpl}){
  const token=await appToken({env,fetchImpl}),url=`${HELIX}/${route}?${new URLSearchParams(params)}`;
  const r=await fetchImpl(url,{headers:{'Client-Id':env.TWITCH_CLIENT_ID,Authorization:`Bearer ${token}`},signal:AbortSignal.timeout(20000)});
  if(r.status===401)cached=null;if(!r.ok)throw new Error(`Twitch API ${route} failed (${r.status})`);return r.json();

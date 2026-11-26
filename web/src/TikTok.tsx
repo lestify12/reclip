@@ -61,7 +61,7 @@ export function TikTokConnection(){
  }
  return <>
   <section className="youtube-connection">
-   <div><h2>TikTok account</h2><p>{connection?.connected?`Connected to ${connection.displayName}`:'Send portrait calendar videos to TikTok Inbox for review.'}</p>
+   <div><h2>TikTok account</h2><p>{connection?.connected?`Connected to ${connection.displayName}`:'Send portrait videos from Publish to your TikTok Inbox for review.'}</p>
     {error&&!setupOpen&&<p role="alert" className="trim-warning">{error}</p>}
    </div>
    <div className="connection-actions">
