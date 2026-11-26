@@ -1,5 +1,5 @@
 import Select from './Select';
-import {lazy,Suspense,useEffect,useRef,useState} from 'react';import AutoPost from './AutoPost';import {CalendarClock,Pencil,Upload,Trash2,Sparkles,Captions,RefreshCw,X,Loader2,Plus,History,Clock,CircleCheck,CircleAlert,FileText,ExternalLink,Send} from 'lucide-react';import type {Job,UploadMetadata} from './types';import {ThumbnailPicker,TitleOptions} from './ThumbnailPicker';
+import {lazy,Suspense,useEffect,useRef,useState} from 'react';import AutoPost from './AutoPost';import TikTokAuto from './TikTokAuto';import {CalendarClock,Pencil,Upload,Trash2,Sparkles,Captions,RefreshCw,X,Loader2,Plus,History,Clock,CircleCheck,CircleAlert,FileText,ExternalLink,Send} from 'lucide-react';import type {Job,UploadMetadata} from './types';import {ThumbnailPicker,TitleOptions} from './ThumbnailPicker';
 const TikTokPost=lazy(()=>import('./TikTok').then(module=>({default:module.TikTokPost})));
 type Post={id:string;autoUpload?:{at:string};postedAs?:{id:string;title:string;url:string};duplicateOf?:string;repeatOf?:{videoId:string;url:string;title:string;reason:string;uploadedAt?:string};metadata:UploadMetadata;settings:{privacy:string;madeForKids:boolean;publishAt?:string};format:string;timeZone:string;state:string;locked:boolean;label:string;error?:string;url?:string;media:{width:number;height:number;duration:number};source?:{jobId:string;clipId:string};sourceTitle?:string;newerVideo?:boolean;clipDirty?:boolean;sourceMissing?:boolean;thumbnail?:{time:number;text:string;updatedAt:string};thumbnailError?:string;updatedAt?:string};
 type LogEntry={videoId:string;url?:string;title:string;uploadedAt:string;via:string;format?:string;privacy?:string;publishAt?:string;repeatAllowed?:boolean};
@@ -130,6 +130,7 @@ export default function Posting({jobs,onConnect,onReclip}:{jobs:Job[];onConnect:
    {planMode!=='later'&&!connected&&<small className="pub-flag">Connect YouTube so the uploads can run.</small>}
    <button className="primary pub-wide" disabled={planning||!selected.length||active} onClick={schedule}>{planning?<Loader2 className="spin" size={15}/>:<CalendarClock size={15}/>}Schedule {selected.length||''} post{selected.length===1?'':'s'}{selected.length?` · ${Math.ceil(selected.length/planTimes.length)} day${Math.ceil(selected.length/planTimes.length)===1?'':'s'}`:''}</button></div>
   <AutoPost/>
+  <TikTokAuto onConnect={onConnect}/>
  </aside></div>
  {showLog&&<UploadLog log={log} onClose={()=>setShowLog(false)}/>}{editing&&<PostEditor post={posts.find(p=>p.id===editing.id)||editing} connected={connected} onClose={()=>setEditing(null)} onReclip={onReclip} onSaved={async upload=>{if(upload)await run([editing.id]);else{setNotice('Post saved.');await refresh();}}}/>}
  {tiktokPost&&<Suspense fallback={null}><TikTokPost post={tiktokPost} onClose={()=>setTikTokPost(null)} onConnect={onConnect}/></Suspense>}

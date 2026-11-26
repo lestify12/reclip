@@ -5,7 +5,7 @@ import {ROOT,PYTHON} from './config.mjs';import {publicJob} from './jobs.mjs';im
 import {EDIT_TEMPLATES,CAPTION_FONTS,applyTemplate} from './templates.mjs';import {CAPTION_STYLES} from './captions.mjs';import {run} from './process.mjs';import {randomUUID} from 'node:crypto';
 import {PostingQueue} from './posting.mjs';import {UploadLog,guardUploads} from './upload-log.mjs';import {SUMMARY_FORMATS} from './summary.mjs';import {writeMetadataAI,metadataProvider} from './metadata-ai.mjs';import {streamPeople,clipPeople} from './people.mjs';import {probe} from './process.mjs';
 import {ReferenceLibrary} from './references.mjs';
-import {validateClipEdits} from './clip-edits.mjs';import {clipTraits,refreshLessons,loadLessons} from './learning.mjs';import {autoPostJob,loadAutopost,saveAutopost} from './autopost.mjs';import {AutopilotEngine,readAutopilot,loadAutopilot,saveAutopilot,sourcesReady} from './autopilot.mjs';import {playedLength} from './edl.mjs';import {PLAY_MAX,SPAN_MAX,momentShape} from './selection.mjs';import {jobTimeline,bestUnused,unusedMoments} from './timeline.mjs';import {MusicLibrary} from './music.mjs';import {titleClips} from './titles.mjs';import {cueSums,loudness,categoryScores} from './moments.mjs';
+import {validateClipEdits} from './clip-edits.mjs';import {clipTraits,refreshLessons,loadLessons} from './learning.mjs';import {autoPostJob,loadAutopost,saveAutopost} from './autopost.mjs';import {TikTokAuto} from './tiktok-auto.mjs';import {AutopilotEngine,readAutopilot,loadAutopilot,saveAutopilot,sourcesReady} from './autopilot.mjs';import {playedLength} from './edl.mjs';import {PLAY_MAX,SPAN_MAX,momentShape} from './selection.mjs';import {jobTimeline,bestUnused,unusedMoments} from './timeline.mjs';import {MusicLibrary} from './music.mjs';import {titleClips} from './titles.mjs';import {cueSums,loudness,categoryScores} from './moments.mjs';
 // Sound and publishing routes live in their own modules.
 import {registerSoundRoutes} from './sounds.mjs';import {registerCreatorRoutes} from './creators.mjs';import {registerPublishRoutes} from './publish-routes.mjs';
 import {TikTokClient,TikTokDrafts,registerTikTokRoutes,tiktokVideoError} from './tiktok.mjs';
@@ -48,7 +48,12 @@ export function createApp({store,queue,youtube:client=new YouTubeClient(),tiktok
  app.use((req,res,next)=>{try{loadEnv();}catch{}next();});
  app.use(express.json({limit:'8mb'}));
  const tiktokExports=new PostingQueue({root:path.join(store.root,'tiktok-exports'),youtube});
- registerTikTokRoutes(app,{client:tiktok,drafts:new TikTokDrafts({root:path.join(store.root,'tiktok'),client:tiktok}),posting,tiktokExports});
+ const tiktokDrafts=new TikTokDrafts({root:path.join(store.root,'tiktok'),client:tiktok});registerTikTokRoutes(app,{client:tiktok,drafts:tiktokDrafts,posting,tiktokExports});
+ // TikTok at release time (off by default): scheduled portrait clips also go to the owner's TikTok inbox when they go live.
+ const tiktokAuto=new TikTokAuto({root:store.root,posting,drafts:tiktokDrafts,client:tiktok});app.locals.tiktokAuto=tiktokAuto;if(process.env.TIKTOK_AUTO!=='0')tiktokAuto.start();
+ app.get('/api/tiktok/auto',(req,res)=>res.json(tiktokAuto.status()));
+ app.post('/api/tiktok/auto',(req,res)=>{try{res.json(tiktokAuto.set(req.body||{}));}catch(e){throw fail(e.message);}});
+ app.post('/api/tiktok/auto/run',async(req,res)=>{const sent=await tiktokAuto.tick();res.json({sent,...tiktokAuto.status()});});
  // The app may live under a dot-folder (for example ~/.projects); Express refuses those paths unless told otherwise.
  // Editor "Find the camera": a face tools crash becomes its plain-language fix.
  const findCam=async(...args)=>{try{return await clipFacecam(...args);}catch(e){throw fail(faceToolsProblem(e.message)||`Couldn’t search for the facecam: ${String(e.message).trim().split(/\r?\n/).at(-1).slice(0,200)}`,faceToolsProblem(e.message)?409:400);}};

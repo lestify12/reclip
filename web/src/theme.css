@@ -1138,3 +1138,8 @@ main{padding-top:28px;padding-bottom:40px}
 @media(max-width:700px){.pub-post>.pub-post-side{grid-column:1/-1;grid-row:2}}
 .pub-stat .pub-stat-icon{display:grid;place-items:center;width:40px;height:40px;margin:0;border-radius:10px}
 .pub-stat .pub-stat-icon svg{display:block}
+
+/* ---------- TikTok at release time ---------- */
+.tt-auto h2>svg{color:#ff5c8a}
+.tt-auto .np-note{display:block;line-height:1.5}.tt-auto .np-note svg{vertical-align:-2px;color:var(--orange)}
+.tt-consent{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.45}.tt-consent input{margin-top:3px;accent-color:var(--accent);flex:none}

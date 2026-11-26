@@ -6,5 +6,5 @@ for(const job of store.list())try{followLiveChat(job,{log:console.warn});}catch{
 const server=app.listen(port,'127.0.0.1',()=>{console.log(`Reclip: http://localhost:${port}`);
  // Say which AI keys were found, so a key that didn't load is obvious in the terminal.
  const env=envStatus(),found=AI_KEYS.filter(([k])=>env.keys[k]).map(([,n])=>n);console.log(env.file?`Settings: ${env.file} · AI keys: ${found.length?found.join(', '):'none'}`:'Settings: no .env file (AI features off until you add a key)');for(const p of env.problems)console.warn(`Settings: ${p}`);});
-function stop(){for(const r of chatRecorders())r.stop();app.locals.posting.stop();app.locals.autopilot?.stop();app.locals.references.shutdown();app.locals.automation.shutdown();if(queue.active)queue.active.controller.abort();server.close(()=>process.exit(0));setTimeout(()=>process.exit(0),5000).unref();}
+function stop(){for(const r of chatRecorders())r.stop();app.locals.posting.stop();app.locals.autopilot?.stop();app.locals.tiktokAuto?.stop();app.locals.references.shutdown();app.locals.automation.shutdown();if(queue.active)queue.active.controller.abort();server.close(()=>process.exit(0));setTimeout(()=>process.exit(0),5000).unref();}
 process.on('SIGINT',stop);process.on('SIGTERM',stop);

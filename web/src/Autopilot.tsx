@@ -1,7 +1,7 @@
 import Select from './Select';
 import {useEffect,useState} from 'react';
 import {Radar,Play,Loader2,Check,CircleAlert,ExternalLink,Scissors,RefreshCw,Clock,Tv,PlaySquare,KeyRound} from 'lucide-react';
-import type {EditTemplate} from './types';
+import type {EditTemplate} from './types';import TikTokAuto from './TikTokAuto';
 
 /** Auto-pilot: watch streamers and channels, send the hyped ones to Reclip, schedule the best clips at six daily times. */
 export type AutopilotConfig={enabled:boolean;everyHours:number;lookbackHours:number;maxSourcesPerRun:number;minViews:number;twitch:{channels:string[];categories:string[]};youtube:{channels:string[]};perDay:number;times:string[];timeZone:string;template:string;outputFormat:string;count:number;picker:string;titleStyle:string;madeForKids:boolean;skipWarnings:boolean};
@@ -19,7 +19,7 @@ function ListField({id,label,hint,value,onChange,placeholder}:{id:string;label:s
  return <div className="field"><label htmlFor={id}>{label}</label><textarea id={id} rows={4} value={text} placeholder={placeholder} spellCheck={false} onChange={e=>setText(e.target.value)} onBlur={()=>onChange(parse(text))}/><small>{hint}</small></div>;
 }
 
-export default function Autopilot({templates,onOpenSettings,onOpenJob}:{templates:EditTemplate[];onOpenSettings:()=>void;onOpenJob:(id:string)=>void}){
+export default function Autopilot({templates,onOpenSettings,onOpenJob,onConnect}:{templates:EditTemplate[];onOpenSettings:()=>void;onOpenJob:(id:string)=>void;onConnect:()=>void}){
  const [data,setData]=useState<Data|null>(null),[draft,setDraft]=useState<AutopilotConfig|null>(null),[busy,setBusy]=useState<''|'save'|'scout'|'run'|'toggle'|string>(''),[error,setError]=useState(''),[result,setResult]=useState<RunResult|null>(null),[saved,setSaved]=useState(false);
  const load=()=>api<Data>('/api/autopilot').then(d=>{setData(d);setDraft(d.config);}).catch(e=>setError((e as Error).message));
  useEffect(()=>{load();const t=setInterval(load,60000);return()=>clearInterval(t);},[]);
@@ -68,6 +68,7 @@ export default function Autopilot({templates,onOpenSettings,onOpenJob}:{template
    </section>
   </div>
   <aside className="ap-side">
+   <TikTokAuto onConnect={onConnect} compact/>
    <section className="np-card ap-card"><header className="ap-card-head"><h2><Play size={16}/>Run</h2></header>
     <p className="np-note">A scout only looks. A run also sends the top {draft.maxSourcesPerRun} source{draft.maxSourcesPerRun>1?'s':''} to clipping.</p>
     <div className="ap-run"><button type="button" className="secondary" disabled={!!busy||noKeys||noSources} onClick={()=>run(true)}>{busy==='scout'?<Loader2 size={15} className="spin"/>:<Radar size={15}/>}Scout now</button><button type="button" className="primary" disabled={!!busy||noKeys||noSources} onClick={()=>run(false)}>{busy==='run'?<Loader2 size={15} className="spin"/>:<Play size={15}/>}Run once</button></div>
